@@ -24,8 +24,8 @@ export function BottomToolbar() {
 
             <InputBase
                 sx={{ ml: 1, flex: 1 }}
-                placeholder="Search Google Maps"
-                inputProps={{ 'aria-label': 'search google maps' }}
+                placeholder="Search Stream-URL"
+                inputProps={{ 'aria-label': 'search Stream-URL' }}
             />
             <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
                 <SearchIcon />
