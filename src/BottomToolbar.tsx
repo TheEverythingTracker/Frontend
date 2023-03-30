@@ -7,7 +7,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import CircleIcon from '@mui/icons-material/Circle';
 import {IconButton, InputBase} from "@mui/material";
 
-export function Toolbar() {
+export function BottomToolbar() {
 
     const [alignment, setAlignment] = useState('left');
     const handleAlignment = (
@@ -20,7 +20,7 @@ export function Toolbar() {
     };
 
     return (
-        <div style={{display:"flex", flexFlow:"row"}}>
+        <div style={{display:"flex", flexFlow:"row", position:"fixed", width:"100%", bottom:"0", backgroundColor:"white"}}>
 
             <InputBase
                 sx={{ ml: 1, flex: 1 }}

@@ -1,5 +1,6 @@
 import React from 'react';
-import {Toolbar} from "./Toolbar";
+import {BottomToolbar} from "./BottomToolbar";
+import {RightToolbar} from "./RightToolbar";
 
 function App() {
     const test = 'testvideo.mp4'
@@ -7,11 +8,13 @@ function App() {
     <div className="App">
 
         <p>Test Video</p>
-        <video controls autoPlay height={"1000"} width={"800"}>
+        <video controls autoPlay height="800">
             <source src={test} type="video/mp4"/>
         </video>
 
-        <Toolbar></Toolbar>
+        <RightToolbar></RightToolbar>
+
+        <BottomToolbar></BottomToolbar>
     </div>
   );
 }
