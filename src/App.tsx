@@ -1,24 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {Toolbar} from "./Toolbar";
 
 function App() {
+    const test = 'testvideo.mp4'
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+        <p>Test Video</p>
+        <video controls autoPlay height={"1000"} width={"800"}>
+            <source src={test} type="video/mp4"/>
+        </video>
+
+        <Toolbar></Toolbar>
     </div>
   );
 }
