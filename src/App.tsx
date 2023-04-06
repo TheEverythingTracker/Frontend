@@ -1,22 +1,36 @@
-import React from 'react';
 import {BottomToolbar} from "./BottomToolbar";
 import {RightToolbar} from "./RightToolbar";
 
+import useWebSocket from 'react-use-websocket';
+
 function App() {
-  return (
-    <div className="App">
+
+    const WS_URL = 'ws://localhost:8765'
+
+    useWebSocket(WS_URL, {
+        onOpen: () => {
+            console.log("Hallo")
+        },
+        onMessage: event => {
+            console.log(event.data)
+        }
+    })
 
 
-        <p>Test Video</p>
-        <video id="video" controls autoPlay height="800">
-            <source type="video/mp4"/>
-        </video>
+    return (
+        <div className="App">
 
-        <RightToolbar></RightToolbar>
 
-        <BottomToolbar></BottomToolbar>
-    </div>
-  );
+            <p>Test Video</p>
+            <video id="video" controls autoPlay height="800">
+                <source type="video/mp4"/>
+            </video>
+
+            <RightToolbar></RightToolbar>
+
+            <BottomToolbar></BottomToolbar>
+        </div>
+    );
 }
 
 export default App;
