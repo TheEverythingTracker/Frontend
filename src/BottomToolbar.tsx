@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 import EditIcon from '@mui/icons-material/Edit';
-import SearchIcon from '@mui/icons-material/Search';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -10,6 +10,7 @@ import {IconButton, InputBase} from "@mui/material";
 export function BottomToolbar() {
 
     const [alignment, setAlignment] = useState('left');
+    const [videoSource, setVideoSource] = useState('');
     const handleAlignment = (
         event: React.MouseEvent<HTMLElement>,
         newAlignment: string | null,
@@ -26,9 +27,17 @@ export function BottomToolbar() {
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Search Stream-URL"
                 inputProps={{ 'aria-label': 'search Stream-URL' }}
+                value={videoSource}
+                onChange={ e => {
+                    setVideoSource(e.target.value);
+                }}
             />
-            <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
-                <SearchIcon />
+            <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={() => {
+                let video =  document.getElementById("video");
+                // @ts-ignore
+                video.setAttribute("src", videoSource);
+            }}>
+                <PlayArrowIcon />
             </IconButton>
 
             <IconButton>
