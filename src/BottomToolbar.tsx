@@ -10,7 +10,7 @@ import {IconButton, InputBase} from "@mui/material";
 export function BottomToolbar() {
 
     const [alignment, setAlignment] = useState('left');
-    const [videoSource, setVideoSource] = useState('');
+    const [videoSource, setVideoSource] = useState('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4');
     const handleAlignment = (
         event: React.MouseEvent<HTMLElement>,
         newAlignment: string | null,
@@ -21,26 +21,39 @@ export function BottomToolbar() {
     };
 
     return (
-        <div style={{display:"flex", flexFlow:"row", position:"fixed", width:"100%", bottom:"0", backgroundColor:"white"}}>
+        <div style={{
+            display: "flex",
+            flexFlow: "row",
+            position: "fixed",
+            width: "100%",
+            bottom: "0",
+            backgroundColor: "white"
+        }}>
 
             <InputBase
-                sx={{ ml: 1, flex: 1 }}
+                sx={{ml: 1, flex: 1}}
                 placeholder="Search Stream-URL"
-                inputProps={{ 'aria-label': 'search Stream-URL' }}
+                inputProps={{'aria-label': 'search Stream-URL'}}
                 value={videoSource}
-                onChange={ e => {
+                onChange={e => {
                     setVideoSource(e.target.value);
                 }}
             />
-            <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={() => {
-                let video =  document.getElementById("video");
-                // @ts-ignore
-                video.setAttribute("src", videoSource);
+            <IconButton type="button" sx={{p: '10px'}} aria-label="search" onClick={() => {
+                let video = document.getElementById("video");
+                if (video !== null) {
+
+                    video.setAttribute("src", videoSource);
+                } else {
+                    console.error("Video element not available");
+                }
             }}>
-                <PlayArrowIcon />
+                <PlayArrowIcon/>
             </IconButton>
 
-            <IconButton>
+            <IconButton onClick={() => {
+
+            }}>
                 <EditIcon></EditIcon>
             </IconButton>
 
@@ -49,16 +62,16 @@ export function BottomToolbar() {
                 exclusive
                 onChange={handleAlignment}
                 aria-label="text alignment">
-            <ToggleButton value="left" aria-label="left aligned">
-                <CircleIcon style={{color:"blue"}}/>
-            </ToggleButton>
-            <ToggleButton value="center" aria-label="centered">
-                <CircleIcon style={{color:"red"}}/>
-            </ToggleButton>
-            <ToggleButton value="right" aria-label="right aligned">
-                <CircleIcon style={{color:"yellow"}}/>
-            </ToggleButton>
-        </ToggleButtonGroup>
+                <ToggleButton value="left" aria-label="left aligned">
+                    <CircleIcon style={{color: "blue"}}/>
+                </ToggleButton>
+                <ToggleButton value="center" aria-label="centered">
+                    <CircleIcon style={{color: "red"}}/>
+                </ToggleButton>
+                <ToggleButton value="right" aria-label="right aligned">
+                    <CircleIcon style={{color: "yellow"}}/>
+                </ToggleButton>
+            </ToggleButtonGroup>
 
         </div>
     );
