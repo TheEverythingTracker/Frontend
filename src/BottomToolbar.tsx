@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 import EditIcon from '@mui/icons-material/Edit';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PublishIcon from '@mui/icons-material/Publish';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -48,7 +48,7 @@ export function BottomToolbar() {
                     console.error("Video element not available");
                 }
             }}>
-                <PlayArrowIcon/>
+                <PublishIcon/>
             </IconButton>
 
             <IconButton onClick={() => {
