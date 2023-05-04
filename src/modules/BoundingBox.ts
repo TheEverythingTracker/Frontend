@@ -3,7 +3,7 @@ export class BoundingBox {
      y: Number;
      height: Number;
      width: Number;
-     id!: string;
+     id!: Number;
      constructor(clickX : number, clickY : number, releaseX : number, releaseY : number) {
         this.x =  clickX < releaseX ? clickX : releaseX;
         this.y = clickY < releaseY ? clickY : releaseY;

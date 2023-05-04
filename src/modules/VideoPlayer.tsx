@@ -8,7 +8,6 @@ import { BoundingBox } from "./BoundingBox";
 export function VideoPlayer() {
     const [boundingBoxes, setBoundingBoxes] = React.useState<BoundingBox[]>([]);
 
-    //const boundingBoxes: HTMLElement[]  = []  ;
     const onClickCoords = {x: 0, y: 0}
 
     const onReleaseCoords = {x: 0, y: 0}
@@ -35,16 +34,8 @@ export function VideoPlayer() {
 
                 let svgViewBox: HTMLElement = document.getElementById("svgViewBox") as HTMLElement
                 ctx.lineWidth = 4;
-                let box : BoundingBox = new BoundingBox(onClickCoords.x, onClickCoords.y,onReleaseCoords.x, onReleaseCoords.y );
-                
-                // Create Bounding box 
-
-                // Calc width and height
-
-                // Test
-                
+                let box : BoundingBox = new BoundingBox(onClickCoords.x, onClickCoords.y,onReleaseCoords.x, onReleaseCoords.y );    
                 setBoundingBoxes(prevNames => [...boundingBoxes, box]);
-
 
                 ctx.strokeRect(onClickCoords.x, onClickCoords.y, onReleaseCoords.x - onClickCoords.x, onReleaseCoords.y - onClickCoords.y)
             }

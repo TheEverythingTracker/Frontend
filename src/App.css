@@ -18,7 +18,7 @@
 
 }
 
-#video, #canvas{
+#video, #canvas, #svgViewBox {
     position: absolute;
     border-style: solid;
     border-color: gray;
@@ -28,9 +28,16 @@
 }
 
 #canvas {
-    z-index: 3;
+    z-index: 4;
 }
 
 #video {
     z-index: 2;
+}
+
+#svgViewBox {
+    z-index: 3
+}
+rect {
+    z-index: 3
 }
