@@ -3,10 +3,12 @@ import {IconButton} from "@mui/material";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
-
+import { BoundingBox } from "./BoundingBox";
 
 export function VideoPlayer() {
+    const [boundingBoxes, setBoundingBoxes] = React.useState<BoundingBox[]>([]);
 
+    //const boundingBoxes: HTMLElement[]  = []  ;
     const onClickCoords = {x: 0, y: 0}
 
     const onReleaseCoords = {x: 0, y: 0}
@@ -30,7 +32,20 @@ export function VideoPlayer() {
         if (canvas !== null) {
             ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
             if (ctx !== null) {
+
+                let svgViewBox: HTMLElement = document.getElementById("svgViewBox") as HTMLElement
                 ctx.lineWidth = 4;
+                let box : BoundingBox = new BoundingBox(onClickCoords.x, onClickCoords.y,onReleaseCoords.x, onReleaseCoords.y );
+                
+                // Create Bounding box 
+
+                // Calc width and height
+
+                // Test
+                
+                setBoundingBoxes(prevNames => [...boundingBoxes, box]);
+
+
                 ctx.strokeRect(onClickCoords.x, onClickCoords.y, onReleaseCoords.x - onClickCoords.x, onReleaseCoords.y - onClickCoords.y)
             }
         }
@@ -64,7 +79,15 @@ export function VideoPlayer() {
             <video id="video" width="1280" height="720">
                 <source type="video/mp4"/>
             </video>
-
+            <svg id="svgViewBox" width="1280" height="720" >
+                {boundingBoxes.map((element, index) => {
+                    // Render all bounding boxes to be displayed
+                    return (
+                    <rect x={element.x.toString()} y={element.y.toString()} height={element.height.toString()} 
+                    width={element.width.toString()}/>
+                    );
+                })}
+            </svg>
             <canvas id="canvas" width="1280" height="720" onMouseDown={handleOnMouseDownOnCanvas}
                     onMouseMove={handleOnMouseMoveOnCanvas}
                     onMouseUp={handleOnMouseUpOnCanvas}>
