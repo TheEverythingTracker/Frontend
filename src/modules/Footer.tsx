@@ -7,7 +7,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import CircleIcon from '@mui/icons-material/Circle';
 import {IconButton, InputBase} from "@mui/material";
 
-export function BottomToolbar() {
+export function Footer() {
 
     const [alignment, setAlignment] = useState('left');
     const [videoSource, setVideoSource] = useState('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4');
