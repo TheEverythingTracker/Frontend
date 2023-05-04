@@ -22,9 +22,9 @@ function App() {
     return (
         <div className="App">
 
-            <VideoPlayer></VideoPlayer>
-
             <RightToolbar></RightToolbar>
+
+            <VideoPlayer></VideoPlayer>
 
             <Footer></Footer>
         </div>
