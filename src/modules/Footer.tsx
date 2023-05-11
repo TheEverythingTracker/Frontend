@@ -1,13 +1,15 @@
-import React, {useState} from 'react';
-
+import React, {useContext, useState} from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import PublishIcon from '@mui/icons-material/Publish';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import CircleIcon from '@mui/icons-material/Circle';
 import {IconButton, InputBase} from "@mui/material";
+import {PlayerContext} from "../App";
 
 export function Footer() {
+
+    const [, setIsPlaying] = useContext(PlayerContext);
 
     const [alignment, setAlignment] = useState('left');
     const [videoSource, setVideoSource] = useState('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4');
@@ -42,7 +44,7 @@ export function Footer() {
             <IconButton type="button" sx={{p: '10px'}} aria-label="search" onClick={() => {
                 let video = document.getElementById("video");
                 if (video !== null) {
-
+                    (setIsPlaying as Function)(false);
                     video.setAttribute("src", videoSource);
                 } else {
                     console.error("Video element not available");

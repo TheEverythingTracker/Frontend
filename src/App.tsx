@@ -2,11 +2,15 @@ import {Footer} from "./modules/Footer";
 import {RightToolbar} from "./modules/RightToolbar";
 
 import useWebSocket from 'react-use-websocket';
-import React from "react";
+import React, {createContext, useState} from "react";
 import "./App.css"
 import {VideoPlayer} from "./modules/VideoPlayer";
 
+export const PlayerContext = createContext([false, Function.prototype]);
+
 function App() {
+
+    const [isPlaying, setIsPlaying] = useState(false);
 
     const WS_URL = 'ws://localhost:8765'
 
@@ -20,14 +24,17 @@ function App() {
     })
 
     return (
-        <div className="App">
 
-            <RightToolbar></RightToolbar>
+        <PlayerContext.Provider value={[isPlaying, setIsPlaying]}>
+            <div className="App">
 
-            <VideoPlayer></VideoPlayer>
+                <RightToolbar></RightToolbar>
 
-            <Footer></Footer>
-        </div>
+                <VideoPlayer></VideoPlayer>
+
+                <Footer></Footer>
+            </div>
+        </PlayerContext.Provider>
     );
 }
 

@@ -1,9 +1,10 @@
-import React, {useState} from "react";
+import React, {useContext} from "react";
 import {IconButton} from "@mui/material";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
 import {BoundingBox} from "./BoundingBox";
+import {PlayerContext} from "../App";
 
 export function VideoPlayer() {
     const [boundingBoxes, setBoundingBoxes] = React.useState<BoundingBox[]>([]);
@@ -12,7 +13,8 @@ export function VideoPlayer() {
 
     const onReleaseCoords = {x: 0, y: 0}
 
-    const [isPlaying, setIsPlaying] = useState(false)
+    const [isPlaying, setIsPlaying] = useContext(PlayerContext);
+
 
     function handleOnMouseDownOnCanvas(e: React.MouseEvent<HTMLCanvasElement>) {
         onClickCoords.x = e.pageX;
@@ -44,12 +46,10 @@ export function VideoPlayer() {
         let video = document.getElementById("video") as HTMLVideoElement;
 
         if (!isPlaying) {
-            setIsPlaying(true)
-            console.log(isPlaying)
+            (setIsPlaying as Function)(true);
             video.play();
         } else {
-            setIsPlaying(false)
-            console.log(isPlaying)
+            (setIsPlaying as Function)(false);
             video.pause();
         }
     }
@@ -59,7 +59,7 @@ export function VideoPlayer() {
         let canvas = document.getElementById("canvas") as HTMLCanvasElement;
         video.setAttribute("src", "");
         canvas.getContext('2d')?.clearRect(0, 0, canvas.width, canvas.height);
-        setIsPlaying(false);
+        (setIsPlaying as Function)(false);
         setBoundingBoxes([]);
     }
 
@@ -73,7 +73,8 @@ export function VideoPlayer() {
                 {boundingBoxes.map((element, index) => {
                     // Render all bounding boxes to be displayed
                     return (
-                        <rect stroke="black" strokeWidth="4" fill="none" x={element.x.toString()} y={element.y.toString()} height={element.height.toString()}
+                        <rect stroke="black" strokeWidth="4" fill="none" x={element.x.toString()}
+                              y={element.y.toString()} height={element.height.toString()}
                               width={element.width.toString()}/>
                     );
                 })}
