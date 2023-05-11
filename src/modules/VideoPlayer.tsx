@@ -37,7 +37,6 @@ export function VideoPlayer() {
                 let box : BoundingBox = new BoundingBox(onClickCoords.x, onClickCoords.y,onReleaseCoords.x, onReleaseCoords.y );    
                 setBoundingBoxes(prevNames => [...boundingBoxes, box]);
 
-                ctx.strokeRect(onClickCoords.x, onClickCoords.y, onReleaseCoords.x - onClickCoords.x, onReleaseCoords.y - onClickCoords.y)
             }
         }
     }
@@ -62,6 +61,7 @@ export function VideoPlayer() {
         video.setAttribute("src", "");
         canvas.getContext('2d')?.clearRect(0, 0, canvas.width, canvas.height);
         setIsPlaying(false);
+        setBoundingBoxes([]);
     }
 
     return(
