@@ -3,7 +3,7 @@ import {IconButton} from "@mui/material";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
-import {BoundingBox} from "./BoundingBox";
+import {BoundingBox} from "../models/BoundingBox";
 import {PlayerContext} from "../App";
 
 export function VideoPlayer() {
@@ -13,7 +13,7 @@ export function VideoPlayer() {
 
     const onReleaseCoords = {x: 0, y: 0}
 
-    const [isPlaying, setIsPlaying] = useContext(PlayerContext);
+    const videoPlayerContext = useContext(PlayerContext);
 
 
     function handleOnMouseDownOnCanvas(e: React.MouseEvent<HTMLCanvasElement>) {
@@ -45,11 +45,11 @@ export function VideoPlayer() {
     function handleOnClickPlayPause() {
         let video = document.getElementById("video") as HTMLVideoElement;
 
-        if (!isPlaying) {
-            (setIsPlaying as Function)(true);
+        if (!videoPlayerContext.isPlaying) {
+            videoPlayerContext.setIsPlaying(true);
             video.play();
         } else {
-            (setIsPlaying as Function)(false);
+            videoPlayerContext.setIsPlaying(false);
             video.pause();
         }
     }
@@ -59,7 +59,7 @@ export function VideoPlayer() {
         let canvas = document.getElementById("canvas") as HTMLCanvasElement;
         video.setAttribute("src", "");
         canvas.getContext('2d')?.clearRect(0, 0, canvas.width, canvas.height);
-        (setIsPlaying as Function)(false);
+        videoPlayerContext.setIsPlaying(false);
         setBoundingBoxes([]);
     }
 
@@ -90,8 +90,8 @@ export function VideoPlayer() {
                 </div>
                 <div className="buttons">
                     <IconButton id="playPause" onClick={handleOnClickPlayPause}>
-                        {!isPlaying && <PlayCircleOutlineIcon/>}
-                        {isPlaying && <PauseCircleOutlineIcon/>}
+                        {!videoPlayerContext.isPlaying && <PlayCircleOutlineIcon/>}
+                        {videoPlayerContext.isPlaying && <PauseCircleOutlineIcon/>}
                     </IconButton>
                     <IconButton onClick={handleOnClickStop}>
                         <StopCircleIcon/>

@@ -5,11 +5,13 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import CircleIcon from '@mui/icons-material/Circle';
 import {IconButton, InputBase} from "@mui/material";
-import {PlayerContext} from "../App";
+import {MyWebsocketContext, PlayerContext} from "../App";
+import {VideoPlayerContext} from "../models/VideoPlayerContext";
 
 export function Footer() {
 
-    const [, setIsPlaying] = useContext(PlayerContext);
+    const videoPlayerContext: VideoPlayerContext = useContext(PlayerContext);
+    const WebsocketContext = useContext(MyWebsocketContext)
 
     const [alignment, setAlignment] = useState('left');
     const [videoSource, setVideoSource] = useState('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4');
@@ -44,7 +46,13 @@ export function Footer() {
             <IconButton type="button" sx={{p: '10px'}} aria-label="search" onClick={() => {
                 let video = document.getElementById("video");
                 if (video !== null) {
-                    (setIsPlaying as Function)(false);
+                    let message = {
+                        "event_type": "start-control-loop",
+                        "request_id": "be94ef2e-24cc-4ed9-80a8-201b160dac76",
+                        "video_source": videoSource
+                    }
+                    WebsocketContext.sendMessage(JSON.stringify(message));
+                    videoPlayerContext.setIsPlaying(false);
                     video.setAttribute("src", videoSource);
                 } else {
                     console.error("Video element not available");
