@@ -3,7 +3,7 @@ import {IconButton} from "@mui/material";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
-import { BoundingBox } from "./BoundingBox";
+import {BoundingBox} from "./BoundingBox";
 
 export function VideoPlayer() {
     const [boundingBoxes, setBoundingBoxes] = React.useState<BoundingBox[]>([]);
@@ -32,9 +32,8 @@ export function VideoPlayer() {
             ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
             if (ctx !== null) {
 
-                let svgViewBox: HTMLElement = document.getElementById("svgViewBox") as HTMLElement
                 ctx.lineWidth = 4;
-                let box : BoundingBox = new BoundingBox(onClickCoords.x, onClickCoords.y,onReleaseCoords.x, onReleaseCoords.y );    
+                let box: BoundingBox = new BoundingBox(onClickCoords.x, onClickCoords.y, onReleaseCoords.x, onReleaseCoords.y);
                 setBoundingBoxes(prevNames => [...boundingBoxes, box]);
 
             }
@@ -64,18 +63,18 @@ export function VideoPlayer() {
         setBoundingBoxes([]);
     }
 
-    return(
+    return (
         <div id="container">
 
             <video id="video" width="1280" height="720">
                 <source type="video/mp4"/>
             </video>
-            <svg id="svgViewBox" width="1280" height="720" >
+            <svg id="svgViewBox" width="1280" height="720">
                 {boundingBoxes.map((element, index) => {
                     // Render all bounding boxes to be displayed
                     return (
-                    <rect x={element.x.toString()} y={element.y.toString()} height={element.height.toString()} 
-                    width={element.width.toString()}/>
+                        <rect stroke="black" strokeWidth="4" fill="none" x={element.x.toString()} y={element.y.toString()} height={element.height.toString()}
+                              width={element.width.toString()}/>
                     );
                 })}
             </svg>
