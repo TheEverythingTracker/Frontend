@@ -4,16 +4,18 @@ import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
 import {BoundingBox} from "../models/BoundingBox";
-import {PlayerContext} from "../App";
+import {MyWebsocketContext, PlayerContext} from "../App";
+import {AddBoundingBoxEvent, EventType} from "../models/Event";
+import {v4 as uuidv4} from 'uuid';
 
 export function VideoPlayer() {
-    const [boundingBoxes, setBoundingBoxes] = React.useState<BoundingBox[]>([]);
 
     const onClickCoords = {x: 0, y: 0}
 
     const onReleaseCoords = {x: 0, y: 0}
 
     const videoPlayerContext = useContext(PlayerContext);
+    const websocketContext = useContext(MyWebsocketContext)
 
 
     function handleOnMouseDownOnCanvas(e: React.MouseEvent<HTMLCanvasElement>) {
@@ -36,7 +38,9 @@ export function VideoPlayer() {
 
                 ctx.lineWidth = 4;
                 let box: BoundingBox = new BoundingBox(onClickCoords.x, onClickCoords.y, onReleaseCoords.x, onReleaseCoords.y);
-                setBoundingBoxes(prevNames => [...boundingBoxes, box]);
+                videoPlayerContext.setBoundingBoxes([...videoPlayerContext.boundingBoxes, box]);
+                let event: AddBoundingBoxEvent = new AddBoundingBoxEvent(EventType.ADD_BOUNDING_BOX, uuidv4(), 0, box);
+                websocketContext.sendEvent(event);
 
             }
         }
@@ -60,7 +64,7 @@ export function VideoPlayer() {
         video.setAttribute("src", "");
         canvas.getContext('2d')?.clearRect(0, 0, canvas.width, canvas.height);
         videoPlayerContext.setIsPlaying(false);
-        setBoundingBoxes([]);
+        videoPlayerContext.setBoundingBoxes([]);
     }
 
     return (
@@ -70,7 +74,7 @@ export function VideoPlayer() {
                 <source type="video/mp4"/>
             </video>
             <svg id="svgViewBox" width="1280" height="720">
-                {boundingBoxes.map((element, index) => {
+                {videoPlayerContext.boundingBoxes.map((element, index) => {
                     // Render all bounding boxes to be displayed
                     return (
                         <rect stroke="black" strokeWidth="4" fill="none" x={element.x.toString()}

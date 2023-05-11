@@ -17,7 +17,7 @@ export function Footer() {
     const WebsocketContext = useContext(MyWebsocketContext)
 
     const [alignment, setAlignment] = useState('left');
-    const [videoSource, setVideoSource] = useState('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4');
+    const [videoSource, setVideoSource] = useState('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_30mb.mp4');
     const handleAlignment = (
         event: React.MouseEvent<HTMLElement>,
         newAlignment: string | null,
@@ -49,8 +49,8 @@ export function Footer() {
             <IconButton type="button" sx={{p: '10px'}} aria-label="search" onClick={() => {
                 let video = document.getElementById("video");
                 if (video !== null) {
-                    let message = new StartControlLoopEvent(EventType.START_CONTROL_LOOP, uuidv4(), videoSource);
-                    WebsocketContext.sendMessage(JSON.stringify(message));
+                    let event = new StartControlLoopEvent(EventType.START_CONTROL_LOOP, uuidv4(), videoSource);
+                    WebsocketContext.sendEvent(event);
                     videoPlayerContext.setIsPlaying(false);
                     video.setAttribute("src", videoSource);
                 } else {

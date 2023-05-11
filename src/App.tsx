@@ -7,22 +7,34 @@ import "./App.css"
 import {VideoPlayer} from "./modules/VideoPlayer";
 import {VideoPlayerContext} from "./models/VideoPlayerContext";
 import {WebsocketContext} from "./models/WebSocketContext";
+import {EventType, UpdateTrackingEvent} from "./models/Event";
+import {BoundingBox} from "./models/BoundingBox";
 
 export const PlayerContext = createContext<VideoPlayerContext>(new VideoPlayerContext(false, () => {
+}, [], () => {
 }));
+
 
 export const MyWebsocketContext = createContext<WebsocketContext>({} as WebsocketContext)
 
 function App() {
-    const videoPlayerContext: VideoPlayerContext = new VideoPlayerContext(...useState(false));
+
+    const videoPlayerContext: VideoPlayerContext = new VideoPlayerContext(...useState<boolean>(false), ...useState<BoundingBox[]>([]));
 
     const WS_URL = 'ws://localhost:8765';
+
     const {sendMessage} = useWebSocket(WS_URL, {
         onOpen: () => {
             console.log("Hallo")
         },
         onMessage: event => {
-            console.log(event.data)
+            let jsonEvent = JSON.parse(event.data)
+            console.log(jsonEvent.event_type)
+            if (jsonEvent.event_type === EventType.UPDATE_TRACKING) {
+                let updateEvent = jsonEvent as UpdateTrackingEvent;
+                console.log(updateEvent)
+                videoPlayerContext.setBoundingBoxes(updateEvent.bounding_boxes)
+            }
         }
     });
 
