@@ -7,6 +7,9 @@ import CircleIcon from '@mui/icons-material/Circle';
 import {IconButton, InputBase} from "@mui/material";
 import {MyWebsocketContext, PlayerContext} from "../App";
 import {VideoPlayerContext} from "../models/VideoPlayerContext";
+import {EventType, StartControlLoopEvent} from "../models/Event";
+import {v4 as uuidv4} from 'uuid';
+
 
 export function Footer() {
 
@@ -46,11 +49,7 @@ export function Footer() {
             <IconButton type="button" sx={{p: '10px'}} aria-label="search" onClick={() => {
                 let video = document.getElementById("video");
                 if (video !== null) {
-                    let message = {
-                        "event_type": "start-control-loop",
-                        "request_id": "be94ef2e-24cc-4ed9-80a8-201b160dac76",
-                        "video_source": videoSource
-                    }
+                    let message = new StartControlLoopEvent(EventType.START_CONTROL_LOOP, uuidv4(), videoSource);
                     WebsocketContext.sendMessage(JSON.stringify(message));
                     videoPlayerContext.setIsPlaying(false);
                     video.setAttribute("src", videoSource);

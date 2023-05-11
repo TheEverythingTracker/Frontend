@@ -17,7 +17,7 @@ function App() {
     const videoPlayerContext: VideoPlayerContext = new VideoPlayerContext(...useState(false));
 
     const WS_URL = 'ws://localhost:8765';
-    const {sendMessage, lastMessage, readyState} = useWebSocket(WS_URL, {
+    const {sendMessage} = useWebSocket(WS_URL, {
         onOpen: () => {
             console.log("Hallo")
         },
