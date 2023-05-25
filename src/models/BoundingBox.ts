@@ -14,6 +14,4 @@ export class BoundingBox {
         this.width = Math.abs(releaseX - clickX);
         this.height = Math.abs(releaseY - clickY);
     }
-
-
 }

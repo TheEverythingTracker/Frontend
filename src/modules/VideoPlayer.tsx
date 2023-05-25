@@ -41,7 +41,6 @@ export function VideoPlayer() {
                 videoPlayerContext.setBoundingBoxes([...videoPlayerContext.boundingBoxes, box]);
                 let event: AddBoundingBoxEvent = new AddBoundingBoxEvent(EventType.ADD_BOUNDING_BOX, uuidv4(), 0, box);
                 websocketContext.sendEvent(event);
-
             }
         }
     }

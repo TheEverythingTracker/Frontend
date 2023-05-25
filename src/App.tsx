@@ -2,13 +2,14 @@ import {Footer} from "./modules/Footer";
 import {RightToolbar} from "./modules/RightToolbar";
 
 import useWebSocket from 'react-use-websocket';
-import React, {createContext, useState} from "react";
+import React, {createContext, useRef, useState} from "react";
 import "./App.css"
 import {VideoPlayer} from "./modules/VideoPlayer";
 import {VideoPlayerContext} from "./models/VideoPlayerContext";
 import {WebsocketContext} from "./models/WebSocketContext";
 import {EventType, UpdateTrackingEvent} from "./models/Event";
 import {BoundingBox} from "./models/BoundingBox";
+import {BoundingBoxData} from "./models/BoundingBoxData";
 
 export const PlayerContext = createContext<VideoPlayerContext>(new VideoPlayerContext(false, () => {
 }, [], () => {
@@ -19,10 +20,26 @@ export const MyWebsocketContext = createContext<WebsocketContext>({} as Websocke
 
 function App() {
 
+    const boundingBoxesQueue: BoundingBoxData[] = [];
+
     const videoPlayerContext: VideoPlayerContext = new VideoPlayerContext(...useState<boolean>(false), ...useState<BoundingBox[]>([]));
 
     const WS_URL = 'ws://localhost:8765';
 
+    setInterval(() => {
+        let boundingBoxData: BoundingBoxData | undefined = boundingBoxesQueue.shift();
+
+        if (boundingBoxData !== undefined) {
+            videoPlayerContext.setBoundingBoxes(boundingBoxData.boundingBoxes);
+            if (!videoPlayerContext.isPlaying) {
+                let video = document.getElementById("video") as HTMLVideoElement;
+                videoPlayerContext.setIsPlaying(true);
+                video.play();
+            }
+        }
+
+    }, 33);
+    
     const {sendMessage} = useWebSocket(WS_URL, {
         onOpen: () => {
             console.log("Hallo")
@@ -32,8 +49,7 @@ function App() {
             console.log(jsonEvent.event_type)
             if (jsonEvent.event_type === EventType.UPDATE_TRACKING) {
                 let updateEvent = jsonEvent as UpdateTrackingEvent;
-                console.log(updateEvent)
-                videoPlayerContext.setBoundingBoxes(updateEvent.bounding_boxes)
+                boundingBoxesQueue.push(new BoundingBoxData(updateEvent.frame, updateEvent.bounding_boxes));
             }
         }
     });

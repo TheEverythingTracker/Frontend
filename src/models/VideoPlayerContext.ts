@@ -5,8 +5,6 @@ export class VideoPlayerContext {
     setIsPlaying: Function;
     boundingBoxes: BoundingBox[];
     setBoundingBoxes: Function;
-
-
     constructor(isPlaying: boolean, setIsPlaying: Function, boundingBoxes: BoundingBox[], setBoundingBoxes: Function) {
         this.isPlaying = isPlaying;
         this.setIsPlaying = setIsPlaying;
