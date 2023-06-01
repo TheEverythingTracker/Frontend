@@ -26,19 +26,24 @@ function App() {
 
     const WS_URL = 'ws://localhost:8765';
 
-    setInterval(() => {
-        let boundingBoxData: BoundingBoxData | undefined = boundingBoxesQueue.shift();
-
-        if (boundingBoxData !== undefined) {
-            videoPlayerContext.setBoundingBoxes(boundingBoxData.boundingBoxes);
-            if (!videoPlayerContext.isPlaying) {
-                let video = document.getElementById("video") as HTMLVideoElement;
-                videoPlayerContext.setIsPlaying(true);
-                video.play();
+    React.useEffect(() => {
+        const intervallBoundingBox = setInterval(() => {
+            let boundingBoxData: BoundingBoxData | undefined = boundingBoxesQueue.shift();
+    
+            if (boundingBoxData !== undefined) {
+                videoPlayerContext.setBoundingBoxes(boundingBoxData.boundingBoxes);
+                if (!videoPlayerContext.isPlaying) {
+                    let video = document.getElementById("video") as HTMLVideoElement;
+                    videoPlayerContext.setIsPlaying(true);
+                    video.play();
+                }
             }
-        }
+        }, 33);
 
-    }, 33);
+      
+    })
+
+    
     
     const {sendMessage} = useWebSocket(WS_URL, {
         onOpen: () => {
