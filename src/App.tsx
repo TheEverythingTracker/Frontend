@@ -20,16 +20,18 @@ export const MyWebsocketContext = createContext<WebsocketContext>({} as Websocke
 
 function App() {
 
-    const boundingBoxesQueue: BoundingBoxData[] = [];
+    const boundingBoxesQueue = useRef(new Array());
 
     const videoPlayerContext: VideoPlayerContext = new VideoPlayerContext(...useState<boolean>(false), ...useState<BoundingBox[]>([]));
 
     const WS_URL = 'ws://localhost:8765';
 
     React.useEffect(() => {
-        const intervallBoundingBox = setInterval(() => {
-            let boundingBoxData: BoundingBoxData | undefined = boundingBoxesQueue.shift();
-    
+        const intervalBoundingBox = setInterval(() => {
+            let boundingBoxData: BoundingBoxData | undefined = boundingBoxesQueue.current.shift();
+            console.log(Date.now() )
+            console.log(boundingBoxData)
+
             if (boundingBoxData !== undefined) {
                 videoPlayerContext.setBoundingBoxes(boundingBoxData.boundingBoxes);
                 if (!videoPlayerContext.isPlaying) {
@@ -38,10 +40,9 @@ function App() {
                     video.play();
                 }
             }
-        }, 33);
-
-      
-    })
+          }  , 100/3);
+          return () => clearInterval(intervalBoundingBox);
+    },[ ]);
 
     
     
@@ -54,7 +55,7 @@ function App() {
             console.log(jsonEvent.event_type)
             if (jsonEvent.event_type === EventType.UPDATE_TRACKING) {
                 let updateEvent = jsonEvent as UpdateTrackingEvent;
-                boundingBoxesQueue.push(new BoundingBoxData(updateEvent.frame, updateEvent.bounding_boxes));
+                boundingBoxesQueue.current.push(new BoundingBoxData(updateEvent.frame, updateEvent.bounding_boxes));
             }
         }
     });
