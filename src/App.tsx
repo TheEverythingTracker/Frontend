@@ -30,32 +30,6 @@ function App() {
 
     const WS_URL = 'ws://localhost:8765';
 
-    /*
-        React.useEffect(() => {
-            console.log("rein in useeffekt");
-            console.log(boundingBoxesQueue.current.length);
-            if (boundingBoxesQueue.current.length > 0) {
-
-                handleIsStarted.current = true;
-                console.log("rein in if abfrage");
-                if (!videoPlayerContext.isPlaying) {
-                    let video = document.getElementById("video") as HTMLVideoElement;
-                    videoPlayerContext.setIsPlaying(true);
-                    video.play().then(result => setInterval(() => {
-
-                        let boundingBoxData: BoundingBoxData | undefined = boundingBoxesQueue.current.shift();
-
-                        if (boundingBoxData !== undefined) {
-                            videoPlayerContext.setBoundingBoxes(boundingBoxData.boundingBoxes);
-                        }
-
-                    }, 100 / 3));
-                }
-
-                //return () => clearInterval(intervalBoundingBox.current);
-            }
-        },[boundingBoxesQueue.current]);
-    */
     function initHandleBoundingBoxes() {
         if (!handleIsStarted.current && boundingBoxesQueue.current.length > 0) {
 
