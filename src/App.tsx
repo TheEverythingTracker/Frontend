@@ -29,55 +29,60 @@ function App() {
     const videoPlayerContext: VideoPlayerContext = new VideoPlayerContext(...useState<boolean>(false), ...useState<BoundingBox[]>([]));
 
     const WS_URL = 'ws://localhost:8765';
-/*
-    React.useEffect(() => {
-        console.log("rein in useeffekt");
-        console.log(boundingBoxesQueue.current.length);
-        if (boundingBoxesQueue.current.length > 0) {
 
-            handleIsStarted.current = true;
-            console.log("rein in if abfrage");
-            if (!videoPlayerContext.isPlaying) {
-                let video = document.getElementById("video") as HTMLVideoElement;
-                videoPlayerContext.setIsPlaying(true);
-                video.play().then(result => setInterval(() => {
+    /*
+        React.useEffect(() => {
+            console.log("rein in useeffekt");
+            console.log(boundingBoxesQueue.current.length);
+            if (boundingBoxesQueue.current.length > 0) {
 
-                    let boundingBoxData: BoundingBoxData | undefined = boundingBoxesQueue.current.shift();
+                handleIsStarted.current = true;
+                console.log("rein in if abfrage");
+                if (!videoPlayerContext.isPlaying) {
+                    let video = document.getElementById("video") as HTMLVideoElement;
+                    videoPlayerContext.setIsPlaying(true);
+                    video.play().then(result => setInterval(() => {
 
-                    if (boundingBoxData !== undefined) {
-                        videoPlayerContext.setBoundingBoxes(boundingBoxData.boundingBoxes);
-                    }
+                        let boundingBoxData: BoundingBoxData | undefined = boundingBoxesQueue.current.shift();
 
-                }, 100 / 3));
+                        if (boundingBoxData !== undefined) {
+                            videoPlayerContext.setBoundingBoxes(boundingBoxData.boundingBoxes);
+                        }
+
+                    }, 100 / 3));
+                }
+
+                //return () => clearInterval(intervalBoundingBox.current);
             }
-
-            //return () => clearInterval(intervalBoundingBox.current);
-        }
-    },[boundingBoxesQueue.current]);
-*/
-    function test() {
-        if (boundingBoxesQueue.current.length > 0 && !handleIsStarted.current) {
+        },[boundingBoxesQueue.current]);
+    */
+    function initHandleBoundingBoxes() {
+        if (!handleIsStarted.current && boundingBoxesQueue.current.length > 0) {
 
             handleIsStarted.current = true;
             console.log("rein in if abfrage");
             if (!videoPlayerContext.isPlaying) {
                 let video = document.getElementById("video") as HTMLVideoElement;
+                video.addEventListener("playing", () => { // "playing" event is quicker, but does not work in firefox (workaround: "timeupdate")
+                    console.log("add setInterval")
+                    setInterval(() => {
+
+                        let boundingBoxData: BoundingBoxData | undefined = boundingBoxesQueue.current.shift();
+
+                        if (boundingBoxData !== undefined) {
+                            videoPlayerContext.setBoundingBoxes(boundingBoxData.boundingBoxes);
+                        }
+
+                    }, 40); // Delay Abhängig von den FPS!
+                }, {once: true});
                 videoPlayerContext.setIsPlaying(true);
-                video.play().then(result => setInterval(() => {
-
-                    let boundingBoxData: BoundingBoxData | undefined = boundingBoxesQueue.current.shift();
-
-                    if (boundingBoxData !== undefined) {
-                        videoPlayerContext.setBoundingBoxes(boundingBoxData.boundingBoxes);
-                    }
-
-                }, 100/3));
+                video.play();
             }
 
             //return () => clearInterval(intervalBoundingBox.current);
         }
     }
-    
+
     const {sendMessage} = useWebSocket(WS_URL, {
         onOpen: () => {
             console.log("Hallo")
@@ -88,7 +93,7 @@ function App() {
             if (jsonEvent.event_type === EventType.UPDATE_TRACKING) {
                 let updateEvent = jsonEvent as UpdateTrackingEvent;
                 boundingBoxesQueue.current.push(new BoundingBoxData(updateEvent.frame, updateEvent.bounding_boxes));
-                test();
+                initHandleBoundingBoxes();
             }
         }
     });
