@@ -4,9 +4,10 @@ import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
 import {BoundingBox} from "../models/BoundingBox";
-import {MyWebsocketContext, PlayerContext} from "../App";
 import {AddBoundingBoxEvent, EventType} from "../models/Event";
 import {v4 as uuidv4} from 'uuid';
+import {VideoPlayerContext} from "../models/VideoPlayerContext";
+import {WebsocketContext} from "../models/WebsocketContext";
 
 export function VideoPlayer() {
 
@@ -14,8 +15,8 @@ export function VideoPlayer() {
 
     const onReleaseCoords = {x: 0, y: 0}
 
-    const videoPlayerContext = useContext(PlayerContext);
-    const websocketContext = useContext(MyWebsocketContext)
+    const videoPlayerContext = useContext(VideoPlayerContext);
+    const websocketContext = useContext(WebsocketContext)
 
 
     function handleOnMouseDownOnCanvas(e: React.MouseEvent<HTMLCanvasElement>) {

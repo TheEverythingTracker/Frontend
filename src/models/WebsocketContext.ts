@@ -1,6 +1,7 @@
 import {SendMessage} from "react-use-websocket/dist/lib/types";
+import {createContext} from "react";
 
-export class WebsocketContext {
+export class WebsocketContextData {
     private sendMessage: SendMessage;
 
     sendEvent: Function = (message: Event) => {
@@ -11,3 +12,6 @@ export class WebsocketContext {
         this.sendMessage = sendMessage;
     }
 }
+
+
+export const WebsocketContext = createContext<WebsocketContextData>({} as WebsocketContextData)

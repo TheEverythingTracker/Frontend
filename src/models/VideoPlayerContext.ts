@@ -1,10 +1,12 @@
 import {BoundingBox} from "./BoundingBox";
+import {createContext} from "react";
 
-export class VideoPlayerContext {
+export class VideoPlayerContextData {
     isPlaying: boolean;
     setIsPlaying: Function;
     boundingBoxes: BoundingBox[];
     setBoundingBoxes: Function;
+
     constructor(isPlaying: boolean, setIsPlaying: Function, boundingBoxes: BoundingBox[], setBoundingBoxes: Function) {
         this.isPlaying = isPlaying;
         this.setIsPlaying = setIsPlaying;
@@ -12,3 +14,7 @@ export class VideoPlayerContext {
         this.setBoundingBoxes = setBoundingBoxes;
     }
 }
+
+export const VideoPlayerContext = createContext<VideoPlayerContextData>(new VideoPlayerContextData(false, () => {
+}, [], () => {
+}));

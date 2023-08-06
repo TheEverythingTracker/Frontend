@@ -5,28 +5,22 @@ import useWebSocket from 'react-use-websocket';
 import React, {createContext, useRef, useState} from "react";
 import "./App.css"
 import {VideoPlayer} from "./modules/VideoPlayer";
-import {VideoPlayerContext} from "./models/VideoPlayerContext";
-import {WebsocketContext} from "./models/WebSocketContext";
+import {VideoPlayerContextData, VideoPlayerContext} from "./models/VideoPlayerContext";
+import {WebsocketContextData, WebsocketContext} from "./models/WebsocketContext";
 import {EventType, UpdateTrackingEvent} from "./models/Event";
 import {BoundingBox} from "./models/BoundingBox";
 import {BoundingBoxData} from "./models/BoundingBoxData";
 
-export const PlayerContext = createContext<VideoPlayerContext>(new VideoPlayerContext(false, () => {
-}, [], () => {
-}));
 
 
-export const MyWebsocketContext = createContext<WebsocketContext>({} as WebsocketContext)
 
 function App() {
 
-    const boundingBoxesQueue = useRef(new Array());
-
-    //const intervalBoundingBox!: React.MutableRefObject<undefined>= useRef(undefined);
+    const boundingBoxesQueue = useRef(Array());
 
     const handleIsStarted = useRef(false);
 
-    const videoPlayerContext: VideoPlayerContext = new VideoPlayerContext(...useState<boolean>(false), ...useState<BoundingBox[]>([]));
+    const videoPlayerContextData: VideoPlayerContextData = new VideoPlayerContextData(...useState<boolean>(false), ...useState<BoundingBox[]>([]));
 
     const WS_URL = 'ws://localhost:8765';
 
@@ -35,7 +29,7 @@ function App() {
 
             handleIsStarted.current = true;
             console.log("rein in if abfrage");
-            if (!videoPlayerContext.isPlaying) {
+            if (!videoPlayerContextData.isPlaying) {
                 let video = document.getElementById("video") as HTMLVideoElement;
                 video.addEventListener("playing", () => { // "playing" event is quicker, but does not work in firefox (workaround: "timeupdate")
                     console.log("add setInterval")
@@ -44,12 +38,12 @@ function App() {
                         let boundingBoxData: BoundingBoxData | undefined = boundingBoxesQueue.current.shift();
 
                         if (boundingBoxData !== undefined) {
-                            videoPlayerContext.setBoundingBoxes(boundingBoxData.boundingBoxes);
+                            videoPlayerContextData.setBoundingBoxes(boundingBoxData.boundingBoxes);
                         }
 
                     }, 40); // Delay Abhängig von den FPS!
                 }, {once: true});
-                videoPlayerContext.setIsPlaying(true);
+                videoPlayerContextData.setIsPlaying(true);
                 video.play();
             }
 
@@ -74,8 +68,8 @@ function App() {
 
 
     return (
-        <MyWebsocketContext.Provider value={new WebsocketContext(sendMessage)}>
-            <PlayerContext.Provider value={videoPlayerContext}>
+        <WebsocketContext.Provider value={new WebsocketContextData(sendMessage)}>
+            <VideoPlayerContext.Provider value={videoPlayerContextData}>
                 <div className="App">
 
                     <RightToolbar></RightToolbar>
@@ -84,8 +78,8 @@ function App() {
 
                     <Footer></Footer>
                 </div>
-            </PlayerContext.Provider>
-        </MyWebsocketContext.Provider>
+            </VideoPlayerContext.Provider>
+        </WebsocketContext.Provider>
     );
 }
 
