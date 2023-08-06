@@ -38,15 +38,6 @@ export function Footer() {
             right: "3px",
         }}>
 
-            {/*<InputBase*/}
-            {/*    sx={{ml: 1, flex: 1}}*/}
-            {/*    placeholder="Search Stream-URL"*/}
-            {/*    inputProps={{'aria-label': 'search Stream-URL'}}*/}
-            {/*    value={videoSource}*/}
-            {/*    onChange={e => {*/}
-            {/*        setVideoSource(e.target.value);*/}
-            {/*    }}*/}
-            {/*/>*/}
             <TextField id="stream-url" label="Stream-URL" variant="outlined" value={videoSource}
                        onChange={e => setVideoSource(e.target.value)} style={{width: "100%"}}/>
 

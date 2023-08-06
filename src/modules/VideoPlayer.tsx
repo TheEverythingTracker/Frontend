@@ -68,7 +68,7 @@ export function VideoPlayer() {
     }
 
     return (
-        <div id="container">
+        <div id="video-container">
 
             <video id="video" width="1280" height="720">
                 <source type="video/mp4"/>

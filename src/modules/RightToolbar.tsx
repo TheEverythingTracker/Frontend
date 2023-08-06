@@ -1,17 +1,9 @@
 import React from 'react';
-import {
-    AppBar, Button, Chip,
-    Divider,
-    Drawer,
-    IconButton,
-    List,
-    ListItemText,
-    styled, Toolbar, Typography, useTheme
-} from "@mui/material";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
+import {Drawer, IconButton, styled, Toolbar, Typography, useTheme} from "@mui/material";
+import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import DeleteIcon from '@mui/icons-material/Delete';
+import {TrackedObjectList} from "./TrackedObjectList";
 
 export function RightToolbar() {
 
@@ -33,7 +25,7 @@ export function RightToolbar() {
 
     const AppBar = styled(MuiAppBar, {
         shouldForwardProp: (prop) => prop !== 'open',
-    })<AppBarProps>(({ theme, open }) => ({
+    })<AppBarProps>(({theme, open}) => ({
         transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
@@ -48,7 +40,7 @@ export function RightToolbar() {
         }),
     }));
 
-    const DrawerHeader = styled('div')(({ theme }) => ({
+    const DrawerHeader = styled('div')(({theme}) => ({
         display: 'flex',
         alignItems: 'center',
         padding: theme.spacing(0, 1),
@@ -57,63 +49,48 @@ export function RightToolbar() {
         justifyContent: 'flex-start',
     }));
 
-    const handleDelete = () => {
-        console.info('You clicked the delete icon.');
-    };
 
-    return(
-        <>
-        <AppBar position="fixed" open={open}>
-            <Toolbar>
-                <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
-                    TheEverythingTracker
-                </Typography>
-                <IconButton
-                    color="inherit"
-                    aria-label="open drawer"
-                    edge="end"
-                    onClick={handleDrawerOpen}
-                    sx={{ ...(open && { display: 'none' }) }}>
+    return (
+        <div>
+            <AppBar position="fixed" open={open}>
+                <Toolbar>
+                    <Typography variant="h6" noWrap sx={{flexGrow: 1}} component="div">
+                        TheEverythingTracker
+                    </Typography>
+                    <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        edge="end"
+                        onClick={handleDrawerOpen}
+                        sx={{...(open && {display: 'none'})}}>
 
-                    <ChevronLeftIcon />
-                </IconButton>
-            </Toolbar>
-        </AppBar>
+                        <ChevronLeftIcon/>
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
 
-        <Drawer
-            sx={{
-                width: drawerWidth,
-                flexShrink: 0,
-                '& .MuiDrawer-paper': {
+            <Drawer
+                sx={{
                     width: drawerWidth,
-                },
-            }}
-            variant="persistent"
-            anchor="right"
-            open={open}>
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                        width: drawerWidth,
+                    },
+                }}
+                variant="persistent"
+                anchor="right"
+                open={open}>
 
-            <DrawerHeader>
-                <IconButton onClick={handleDrawerClose}>
-                    {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                </IconButton>
-                Objekte
-            </DrawerHeader>
-
-            <List style={{display:"flex", flexFlow:"column"}}>
-                <Chip label="Objekt1" onDelete={handleDelete} />
-                <Chip label="Objekt2" onDelete={handleDelete} />
-                <Chip label="Objekt3" onDelete={handleDelete} />
-                <Chip label="Objekt4" onDelete={handleDelete} />
-                <Chip label="Objekt5" onDelete={handleDelete} />
-                <Chip label="Objekt6" onDelete={handleDelete} />
-            </List>
-            <Divider/>
-
-            <Button style={{color:"red", border:"solid"}}>
-                <DeleteIcon></DeleteIcon>
-                <ListItemText primary={"Delete"} />
-            </Button>
-        </Drawer>
-        </>
+                <DrawerHeader>
+                    <IconButton onClick={handleDrawerClose}>
+                        {theme.direction === 'rtl' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
+                    </IconButton>
+                    <Typography variant="h6" noWrap sx={{flexGrow: 1}} component="div">
+                        Objects
+                    </Typography>
+                </DrawerHeader>
+                <TrackedObjectList/>
+            </Drawer>
+        </div>
     );
 }
