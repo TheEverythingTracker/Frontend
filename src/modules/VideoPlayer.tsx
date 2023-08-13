@@ -38,7 +38,7 @@ export function VideoPlayer() {
             if (ctx !== null) {
 
                 ctx.lineWidth = 4;
-                let box: BoundingBox = new BoundingBox(onClickCoords.x, onClickCoords.y, onReleaseCoords.x, onReleaseCoords.y);
+                let box: BoundingBox = new BoundingBox(onClickCoords.x, onClickCoords.y, onReleaseCoords.x, onReleaseCoords.y, null);
                 videoPlayerContext.setBoundingBoxes([...videoPlayerContext.boundingBoxes, box]);
                 let event: AddBoundingBoxEvent = new AddBoundingBoxEvent(EventType.ADD_BOUNDING_BOX, uuidv4(), 0, box);
                 websocketContext.sendEvent(event);
