@@ -3,11 +3,11 @@ import {UpdateTrackingEvent} from "./Event";
 
 export class BoundingBoxData {
 
-    frame: Number;
+    frame_number: Number;
     boundingBoxes: BoundingBox[];
 
     constructor(frame: number, boundingBoxes: BoundingBox[]){
         this.boundingBoxes = boundingBoxes;
-        this.frame = frame;
+        this.frame_number = frame;
     }
 }

@@ -22,7 +22,7 @@ function App() {
 
     const videoPlayerContextData: VideoPlayerContextData = new VideoPlayerContextData(...useState<boolean>(false), ...useState<BoundingBox[]>([]));
 
-    const WS_URL = 'ws://localhost:8765';
+    const WS_URL = 'ws://localhost:8000/websocket/b81f11ae-22e0-49b2-81c2-5aa8d490c589';
 
     function initHandleBoundingBoxes() {
         if (!handleIsStarted.current && boundingBoxesQueue.current.length > 0) {
@@ -60,7 +60,7 @@ function App() {
             console.log(jsonEvent.event_type)
             if (jsonEvent.event_type === EventType.UPDATE_TRACKING) {
                 let updateEvent = jsonEvent as UpdateTrackingEvent;
-                boundingBoxesQueue.current.push(new BoundingBoxData(updateEvent.frame, updateEvent.bounding_boxes));
+                boundingBoxesQueue.current.push(new BoundingBoxData(updateEvent.frame_number, updateEvent.bounding_boxes));
                 initHandleBoundingBoxes();
             }
         }

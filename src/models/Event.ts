@@ -29,13 +29,13 @@ export class StartControlLoopEvent extends Event {
 }
 
 export class AddBoundingBoxEvent extends Event {
-    frame: number;
+    frame_number: number;
     bounding_box: BoundingBox;
 
 
     constructor(event_type: EventType, request_id: String, frame: number, bounding_box: BoundingBox) {
         super(event_type, request_id);
-        this.frame = frame;
+        this.frame_number = frame;
         this.bounding_box = bounding_box;
     }
 }
@@ -51,12 +51,12 @@ export class DeleteBoundingBoxesEvent extends Event {
 }
 
 export class UpdateTrackingEvent extends Event {
-    frame: number;
+    frame_number: number;
     bounding_boxes: BoundingBox[];
 
     constructor(event_type: EventType, request_id: String, frame: number, bounding_boxes: BoundingBox[]) {
         super(event_type, request_id);
-        this.frame = frame;
+        this.frame_number = frame;
         this.bounding_boxes = bounding_boxes;
     }
 }
