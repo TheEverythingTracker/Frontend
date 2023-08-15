@@ -10,8 +10,7 @@ import {WebsocketContextData, WebsocketContext} from "./models/WebsocketContext"
 import {EventType, UpdateTrackingEvent} from "./models/Event";
 import {BoundingBox} from "./models/BoundingBox";
 import {BoundingBoxData} from "./models/BoundingBoxData";
-
-
+import {json} from "stream/consumers";
 
 
 function App() {
@@ -56,7 +55,8 @@ function App() {
             console.log("Hallo")
         },
         onMessage: event => {
-            let jsonEvent = JSON.parse(event.data)
+            // parse json 2 times because event is stringified "too much"
+            let jsonEvent = JSON.parse(JSON.parse(event.data))
             console.log(jsonEvent.event_type)
             if (jsonEvent.event_type === EventType.UPDATE_TRACKING) {
                 let updateEvent = jsonEvent as UpdateTrackingEvent;

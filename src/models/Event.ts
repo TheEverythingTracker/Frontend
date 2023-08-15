@@ -1,4 +1,5 @@
 import {BoundingBox} from "./BoundingBox";
+
 export enum EventType {
     START_CONTROL_LOOP = "start-control-loop",
     ADD_BOUNDING_BOX = "add-bounding-box",
@@ -9,17 +10,26 @@ export enum EventType {
     FAILURE = "failure"
 }
 
+
 export abstract class Event {
     event_type: EventType;
-    request_id: String;
 
-    protected constructor(event_type: EventType, request_id: String) {
+    protected constructor(event_type: EventType) {
         this.event_type = event_type;
-        this.request_id = request_id;
     }
 }
 
-export class StartControlLoopEvent extends Event {
+export abstract class IdEvent extends Event {
+    request_id: String;
+
+    protected constructor(event_type: EventType, request_id: String) {
+        super(event_type);
+        this.request_id = request_id;
+    }
+
+}
+
+export class StartControlLoopEvent extends IdEvent {
     video_source: String;
 
     constructor(event_type: EventType, request_id: String, video_source: String) {
@@ -28,7 +38,7 @@ export class StartControlLoopEvent extends Event {
     }
 }
 
-export class AddBoundingBoxEvent extends Event {
+export class AddBoundingBoxEvent extends IdEvent {
     frame_number: number;
     bounding_box: BoundingBox;
 
@@ -41,7 +51,7 @@ export class AddBoundingBoxEvent extends Event {
 }
 
 
-export class DeleteBoundingBoxesEvent extends Event {
+export class DeleteBoundingBoxesEvent extends IdEvent {
     ids: String[];
 
     constructor(event_type: EventType, request_id: String, ids: String[]) {
@@ -54,22 +64,22 @@ export class UpdateTrackingEvent extends Event {
     frame_number: number;
     bounding_boxes: BoundingBox[];
 
-    constructor(event_type: EventType, request_id: String, frame: number, bounding_boxes: BoundingBox[]) {
-        super(event_type, request_id);
+    constructor(event_type: EventType, frame: number, bounding_boxes: BoundingBox[]) {
+        super(event_type);
         this.frame_number = frame;
         this.bounding_boxes = bounding_boxes;
     }
 }
 
 
-export class StopControlLoopEvent extends Event {
+export class StopControlLoopEvent extends IdEvent {
 
     constructor(event_type: EventType, request_id: String) {
         super(event_type, request_id);
     }
 }
 
-export abstract class AnswerEvent extends Event {
+export abstract class AnswerEvent extends IdEvent {
     message: String;
 
     protected constructor(event_type: EventType, request_id: String, message: String) {
