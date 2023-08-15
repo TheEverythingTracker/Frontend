@@ -2,7 +2,7 @@ import {Footer} from "./modules/Footer";
 import {RightToolbar} from "./modules/RightToolbar";
 
 import useWebSocket from 'react-use-websocket';
-import React, {createContext, useRef, useState} from "react";
+import React, {createContext, useCallback, useEffect, useRef, useState} from "react";
 import "./App.css"
 import {VideoPlayer} from "./modules/VideoPlayer";
 import {VideoPlayerContextData, VideoPlayerContext} from "./models/VideoPlayerContext";
@@ -11,6 +11,7 @@ import {EventType, UpdateTrackingEvent} from "./models/Event";
 import {BoundingBox} from "./models/BoundingBox";
 import {BoundingBoxData} from "./models/BoundingBoxData";
 import {json} from "stream/consumers";
+import {v4 as uuidv4} from 'uuid';
 
 
 function App() {
@@ -20,8 +21,16 @@ function App() {
     const handleIsStarted = useRef(false);
 
     const videoPlayerContextData: VideoPlayerContextData = new VideoPlayerContextData(...useState<boolean>(false), ...useState<BoundingBox[]>([]));
+    const websocketUrl = useRef("")
 
-    const WS_URL = 'ws://localhost:8000/websocket/b81f11ae-22e0-49b2-81c2-5aa8d490c589';
+    const getUrl = useCallback(() => {
+        if (websocketUrl.current === "") {
+            let sessionId = uuidv4();
+            websocketUrl.current = `ws://localhost:8000/websocket/${sessionId}`;
+        }
+        console.log(websocketUrl.current)
+        return websocketUrl.current;
+    }, [])
 
     function initHandleBoundingBoxes() {
         if (!handleIsStarted.current && boundingBoxesQueue.current.length > 0) {
@@ -50,9 +59,9 @@ function App() {
         }
     }
 
-    const {sendMessage} = useWebSocket(WS_URL, {
+    const {sendMessage} = useWebSocket(getUrl, {
         onOpen: () => {
-            console.log("Hallo")
+            console.log("Connected to websocket ");
         },
         onMessage: event => {
             // parse json 2 times because event is stringified "too much"
