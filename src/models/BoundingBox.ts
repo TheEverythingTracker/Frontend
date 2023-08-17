@@ -1,19 +1,18 @@
 export class BoundingBox {
-    x: Number;
-    y: Number;
-    height: Number;
-    width: Number;
-    id: Number;
-    frame_number: Number | null;
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+    id: number;
+    frame_number: number | null;
     static counter: number = 0;
 
-    constructor(clickX: number, clickY: number, releaseX: number, releaseY: number, frame_number: number | null) {
+    constructor(x: number, y: number, width: number, height: number, frame_number: number | null) {
         this.frame_number = frame_number;
         this.id = BoundingBox.counter++;
-        this.x = clickX < releaseX ? clickX : releaseX;
-        this.y = clickY < releaseY ? clickY : releaseY;
-
-        this.width = Math.abs(releaseX - clickX);
-        this.height = Math.abs(releaseY - clickY);
+        this.x = x
+        this.y = y;
+        this.width = width;
+        this.height = height;
     }
 }
