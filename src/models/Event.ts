@@ -52,9 +52,9 @@ export class AddBoundingBoxEvent extends IdEvent {
 
 
 export class DeleteBoundingBoxesEvent extends IdEvent {
-    ids: String[];
+    ids: number[];
 
-    constructor(event_type: EventType, request_id: String, ids: String[]) {
+    constructor(event_type: EventType, request_id: String, ids: number[]) {
         super(event_type, request_id);
         this.ids = ids;
     }

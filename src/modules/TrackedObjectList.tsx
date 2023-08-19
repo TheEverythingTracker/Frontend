@@ -1,27 +1,39 @@
-import {Avatar, Button, Chip, Divider, List, ListItem, ListItemAvatar, ListItemText} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import React from "react";
+import {Button, Divider, List, ListItemText} from "@mui/material";
+import React, {useContext} from "react";
 import {TrackedObjectListItem} from "./TrackedObjectListItem";
 import {DeleteForever} from "@mui/icons-material";
+import {VideoPlayerContext} from "../models/VideoPlayerContext";
+import {WebsocketContext} from "../models/WebsocketContext";
+import {DeleteBoundingBoxesEvent, EventType} from "../models/Event";
+import {v4 as uuidv4} from 'uuid';
 
 export const TrackedObjectList = () => {
 
-    const handleDelete = () => {
-        console.info('You clicked the delete icon.');
+    const videoPlayerContext = useContext(VideoPlayerContext);
+    const websocketContext = useContext(WebsocketContext);
+    const handleDelete = (id: number) => {
+        websocketContext.sendEvent(new DeleteBoundingBoxesEvent(EventType.DELETE_BOUNDING_BOX, uuidv4(), [id]))
     };
+
+    function handleDeleteAll() {
+        let allIds: number[] = [];
+        videoPlayerContext.boundingBoxes.forEach((element) => allIds.push(element.id));
+        websocketContext.sendEvent(new DeleteBoundingBoxesEvent(EventType.DELETE_BOUNDING_BOX, uuidv4(), allIds));
+    }
 
     return (
         <div>
             <List style={{display: "flex", flexFlow: "column"}}>
-                <TrackedObjectListItem name="Object 1" deleteHandler={handleDelete}/>
-                <TrackedObjectListItem name="Object 2" deleteHandler={handleDelete}/>
-                <TrackedObjectListItem name="Object 3" deleteHandler={handleDelete}/>
-                <TrackedObjectListItem name="Object 4" deleteHandler={handleDelete}/>
-                <TrackedObjectListItem name="Object 5" deleteHandler={handleDelete}/>
+                {videoPlayerContext.boundingBoxes.map((element, index) => {
+                    return (
+                        <TrackedObjectListItem name={`Object ${element.id + 1}`} deleteHandler={() => handleDelete(element.id)}/>
+                    );
+                })}
             </List>
             <Divider/>
             <Button
-                style={{display: "flex", color: "red", border: "solid", width: "96%", marginLeft: "2%", marginTop: "5px"}}>
+                style={{display: "flex", color: "red", border: "solid", width: "96%", marginLeft: "2%", marginTop: "5px"}}
+                onClick={handleDeleteAll}>
                 <DeleteForever/>
                 <ListItemText primary={"Delete"}/>
             </Button>
