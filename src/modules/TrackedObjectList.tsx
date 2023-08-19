@@ -11,14 +11,21 @@ export const TrackedObjectList = () => {
 
     const videoPlayerContext = useContext(VideoPlayerContext);
     const websocketContext = useContext(WebsocketContext);
+
     const handleDelete = (id: number) => {
         websocketContext.sendEvent(new DeleteBoundingBoxesEvent(EventType.DELETE_BOUNDING_BOX, uuidv4(), [id]))
+        const removedBoundingBox = videoPlayerContext.boundingBoxes.splice(id, 1);
+        console.log(`Removed Bounding Box: ${removedBoundingBox[0]}`);
+        console.log(`Remaining BoundingBoxes: ${videoPlayerContext.boundingBoxes}`);
     };
 
     function handleDeleteAll() {
         let allIds: number[] = [];
         videoPlayerContext.boundingBoxes.forEach((element) => allIds.push(element.id));
         websocketContext.sendEvent(new DeleteBoundingBoxesEvent(EventType.DELETE_BOUNDING_BOX, uuidv4(), allIds));
+        videoPlayerContext.boundingBoxes = [];
+        console.log("Removed all Bounding Boxes");
+        console.log(`Remaining BoundingBoxes: ${videoPlayerContext.boundingBoxes}`);
     }
 
     return (
