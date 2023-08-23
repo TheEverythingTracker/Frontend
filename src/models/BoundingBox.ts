@@ -15,4 +15,10 @@ export class BoundingBox {
         this.width = width;
         this.height = height;
     }
+
+    /* todo: Doesnt work because box may not be instanceOf BoundingBox during runtime (but why?)
+    toString(): string {
+        return `ID: ${this.id} Frame: ${this.frame_number}`;
+    }
+    */
 }
