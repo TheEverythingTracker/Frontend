@@ -6,6 +6,7 @@ import {VideoPlayerContext} from "../models/VideoPlayerContext";
 import {WebsocketContext} from "../models/WebsocketContext";
 import {DeleteBoundingBoxesEvent, EventType} from "../models/Event";
 import {v4 as uuidv4} from 'uuid';
+import {BoundingBox} from "../models/BoundingBox";
 
 export const TrackedObjectList = () => {
 
@@ -14,32 +15,41 @@ export const TrackedObjectList = () => {
 
     const handleDelete = (id: number) => {
         websocketContext.sendEvent(new DeleteBoundingBoxesEvent(EventType.DELETE_BOUNDING_BOX, uuidv4(), [id]))
-        const removedBoundingBox = videoPlayerContext.boundingBoxes.splice(id, 1);
-        console.log(`Removed Bounding Box: ${removedBoundingBox[0]}`);
-        console.log(`Remaining BoundingBoxes: ${videoPlayerContext.boundingBoxes}`);
+        videoPlayerContext.boundingBoxes
+            = videoPlayerContext.boundingBoxes.filter((box: BoundingBox) => box.id !== id);
+        videoPlayerContext.setBoundingBoxes(videoPlayerContext.boundingBoxes)
     };
 
-    function handleDeleteAll() {
+    const handleDeleteAll = () => {
         let allIds: number[] = [];
+
         videoPlayerContext.boundingBoxes.forEach((element) => allIds.push(element.id));
         websocketContext.sendEvent(new DeleteBoundingBoxesEvent(EventType.DELETE_BOUNDING_BOX, uuidv4(), allIds));
         videoPlayerContext.boundingBoxes = [];
-        console.log("Removed all Bounding Boxes");
-        console.log(`Remaining BoundingBoxes: ${videoPlayerContext.boundingBoxes}`);
-    }
+        videoPlayerContext.setBoundingBoxes(videoPlayerContext.boundingBoxes)
+    };
 
     return (
         <div>
             <List style={{display: "flex", flexFlow: "column"}}>
-                {videoPlayerContext.boundingBoxes.map((element, index) => {
+                {videoPlayerContext.boundingBoxes.map((element, _) => {
                     return (
-                        <TrackedObjectListItem name={`Object ${element.id + 1}`} deleteHandler={() => handleDelete(element.id)}/>
+                        <TrackedObjectListItem name={`Object ${element.id + 1}`}
+                                               deleteHandler={() => handleDelete(element.id)}
+                                               key={element.id}/>
                     );
                 })}
             </List>
             <Divider/>
             <Button
-                style={{display: "flex", color: "red", border: "solid", width: "96%", marginLeft: "2%", marginTop: "5px"}}
+                style={{
+                    display: "flex",
+                    color: "red",
+                    border: "solid",
+                    width: "96%",
+                    marginLeft: "2%",
+                    marginTop: "5px"
+                }}
                 onClick={handleDeleteAll}>
                 <DeleteForever/>
                 <ListItemText primary={"Delete"}/>
