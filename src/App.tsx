@@ -36,16 +36,31 @@ function App() {
     }, [])
 
     const handleNewFrame = (now: DOMHighResTimeStamp, metadata: VideoFrameCallbackMetadata) => {
-        frameCounter.current++;
+        let currFrame = frameCounter.current++;
         console.log(frameCounter.current);
 
-        let boundingBoxData: BoundingBoxData | undefined = boundingBoxesQueue.current.shift();
+        const allowedFrameOffset = 4;
+        let minAcceptedFrame = currFrame - allowedFrameOffset 
+        let  maxAcceptedFrame = currFrame + allowedFrameOffset
 
-        if (boundingBoxData !== undefined) {
-            videoPlayerContextData.setBoundingBoxes(boundingBoxData.boundingBoxes);
+         // Discard boxes that are too old 
+        let nextBoxes = boundingBoxesQueue.current[0]
+        let bestMatchingBoxes = nextBoxes;
+
+        while( nextBoxes !== undefined && nextBoxes.frame_number <= currFrame) {
+            bestMatchingBoxes =  boundingBoxesQueue.current.shift();
+            nextBoxes = boundingBoxesQueue.current[0]
         }
         
-        video.requestVideoFrameCallback(handleNewFrame)
+        if (bestMatchingBoxes !== undefined 
+            && bestMatchingBoxes .frame_number >= minAcceptedFrame 
+            && bestMatchingBoxes.frame_number  <= maxAcceptedFrame) {
+                    videoPlayerContextData.setBoundingBoxes(bestMatchingBoxes.boundingBoxes);
+                    console.log("Selected result fro Frame " + bestMatchingBoxes.frame_number + "current Frame is " + currFrame);
+        }
+        
+        // Re-register Callback for next Frame
+        video.requestVideoFrameCallback(handleNewFrame); 
 
     }
     /**
