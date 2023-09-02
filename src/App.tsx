@@ -9,7 +9,7 @@ import {VideoPlayerContext, VideoPlayerContextData} from "./models/VideoPlayerCo
 import {WebsocketContext, WebsocketContextData} from "./models/WebsocketContext";
 import {EventType, UpdateTrackingEvent} from "./models/Event";
 import {BoundingBox} from "./models/BoundingBox";
-import {BoundingBoxData} from "./models/BoundingBoxData";
+import {BoundingBoxFrameData} from "./models/BoundingBoxFrameData";
 import {v4 as uuidv4} from 'uuid';
 
 
@@ -41,7 +41,7 @@ function App() {
         video.pause()
         videoPlayerContext.setIsPlaying(false)
         await new Promise(r => setTimeout(r, 120));
-        await video.play().then(result => videoPlayerContext.setIsPlaying(true))
+        await video.play().then(_ => videoPlayerContext.setIsPlaying(true))
     }
 
     function drawFPS(timestamp: DOMHighResTimeStamp){
@@ -55,7 +55,7 @@ function App() {
         }
     }
 
-    const handleNewFrame = async (now: DOMHighResTimeStamp, metadata: VideoFrameCallbackMetadata) => {
+    const handleNewFrame = async (now: DOMHighResTimeStamp, _: VideoFrameCallbackMetadata) => {
 
         if(frameCounter.current === 0) {
             initialTimestamp.current = now;
@@ -119,7 +119,7 @@ function App() {
             console.log(jsonEvent.event_type)
             if (jsonEvent.event_type === EventType.UPDATE_TRACKING) {
                 let updateEvent = jsonEvent as UpdateTrackingEvent;
-                boundingBoxesQueue.current.push(new BoundingBoxData(updateEvent.frame_number, updateEvent.bounding_boxes));
+                boundingBoxesQueue.current.push(new BoundingBoxFrameData(updateEvent.frame_number, updateEvent.bounding_boxes));
                 initHandleBoundingBoxes();
             }
         }

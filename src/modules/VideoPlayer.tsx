@@ -11,13 +11,12 @@ export function VideoPlayer() {
 
     const videoPlayerContext = useContext(VideoPlayerContext);
 
-
-    function handleOnClickPlayPause() {
+    async function handleOnClickPlayPause() {
         let video = document.getElementById("video") as HTMLVideoElement;
 
         if (!videoPlayerContext.isPlaying) {
             videoPlayerContext.setIsPlaying(true);
-            video.play();
+            await video.play();
         } else {
             videoPlayerContext.setIsPlaying(false);
             video.pause();
