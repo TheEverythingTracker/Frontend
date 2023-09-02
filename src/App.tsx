@@ -34,9 +34,9 @@ function App() {
         return websocketUrl.current;
     }, [])
 
-    async function delayPlaybackFrame() {
+    async function delayPlayback() {
         video.pause()
-        await new Promise(r => setTimeout(r, 80));
+        await new Promise(r => setTimeout(r, 120));
         video.play()
     }
 
@@ -44,7 +44,7 @@ function App() {
         let next = boundingBoxesQueue.current[0]
 
         if (next == undefined) {
-            await delayPlaybackFrame();
+            await delayPlayback();
             frameCounter.current++;
         } else {
             let currFrame = frameCounter.current++;
