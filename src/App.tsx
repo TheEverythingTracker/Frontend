@@ -50,19 +50,19 @@ function App() {
         let fps = Math.round(frameCounter.current/(currentTimeInMs/1000));
         // @ts-ignore
         let fpsParagraph = document.getElementById("fps") as HTMLParagraphElement;
-        if (fpsParagraph != undefined) {
+        if (fpsParagraph !== undefined) {
             fpsParagraph.innerText = "FPS: " + fps.toString();
         }
     }
 
     const handleNewFrame = async (now: DOMHighResTimeStamp, metadata: VideoFrameCallbackMetadata) => {
 
-        if(frameCounter.current == 0) {
+        if(frameCounter.current === 0) {
             initialTimestamp.current = now;
         }
         drawFPS(now);
         let next = boundingBoxesQueue.current[0]
-        if (next == undefined) {
+        if (next === undefined) {
             await delayPlayback();
             frameCounter.current++;
         } else {
