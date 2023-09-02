@@ -40,7 +40,9 @@ export function VideoPlayer() {
                 <source type="video/mp4"/>
             </video>
             <VideoOverlay/>
-
+            <div id="fpsDiv">
+                <p id="fps"></p>
+            </div>
             <div id="controls">
                 <div className="buttons">
                     <IconButton id="playPause" onClick={handleOnClickPlayPause}>

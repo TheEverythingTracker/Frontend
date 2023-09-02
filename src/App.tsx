@@ -20,6 +20,7 @@ function App() {
     const handleIsStarted = useRef(false);      // Flag indicates if initHandleBoundingBoxes was run
     const websocketUrl = useRef("")
     const frameCounter = useRef(0)
+    const initialTimestamp = useRef(0)
     const video = document.getElementById("video") as HTMLVideoElement;
 
 
@@ -40,9 +41,21 @@ function App() {
         video.play()
     }
 
-    const handleNewFrame = async (now: DOMHighResTimeStamp, metadata: VideoFrameCallbackMetadata) => {
-        let next = boundingBoxesQueue.current[0]
+    function drawFPS(timestamp: DOMHighResTimeStamp){
 
+        let currentTimeInMs = timestamp - initialTimestamp.current;
+        let fps = Math.round(frameCounter.current/(currentTimeInMs/1000));
+        // @ts-ignore
+        document.getElementById("fps").innerText = "FPS: " + fps.toString();
+    }
+
+    const handleNewFrame = async (now: DOMHighResTimeStamp, metadata: VideoFrameCallbackMetadata) => {
+
+        if(frameCounter.current == 0) {
+            initialTimestamp.current = now;
+        }
+        drawFPS(now);
+        let next = boundingBoxesQueue.current[0]
         if (next == undefined) {
             await delayPlayback();
             frameCounter.current++;
