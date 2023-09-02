@@ -2,7 +2,7 @@ import {Footer} from "./modules/Footer";
 import {RightToolbar} from "./modules/RightToolbar";
 
 import useWebSocket from 'react-use-websocket';
-import React, {useCallback, useRef, useState} from "react";
+import React, {useCallback, useContext, useRef, useState} from "react";
 import "./App.css"
 import {VideoPlayer} from "./modules/VideoPlayer";
 import {VideoPlayerContext, VideoPlayerContextData} from "./models/VideoPlayerContext";
@@ -26,6 +26,8 @@ function App() {
 
     const videoPlayerContextData: VideoPlayerContextData = new VideoPlayerContextData(...useState<boolean>(false), ...useState<BoundingBox[]>([]));
 
+    const videoPlayerContext = useContext(VideoPlayerContext);
+
     const getUrl = useCallback(() => {
         if (websocketUrl.current === "") {
             let sessionId = uuidv4();
@@ -37,8 +39,9 @@ function App() {
 
     async function delayPlayback() {
         video.pause()
+        videoPlayerContext.setIsPlaying(false)
         await new Promise(r => setTimeout(r, 120));
-        video.play()
+        await video.play().then(result => videoPlayerContext.setIsPlaying(true))
     }
 
     function drawFPS(timestamp: DOMHighResTimeStamp){
@@ -46,7 +49,10 @@ function App() {
         let currentTimeInMs = timestamp - initialTimestamp.current;
         let fps = Math.round(frameCounter.current/(currentTimeInMs/1000));
         // @ts-ignore
-        document.getElementById("fps").innerText = "FPS: " + fps.toString();
+        let fpsParagraph = document.getElementById("fps") as HTMLParagraphElement;
+        if (fpsParagraph != undefined) {
+            fpsParagraph.innerText = "FPS: " + fps.toString();
+        }
     }
 
     const handleNewFrame = async (now: DOMHighResTimeStamp, metadata: VideoFrameCallbackMetadata) => {
