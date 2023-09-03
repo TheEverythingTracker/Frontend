@@ -127,14 +127,17 @@ export function VideoOverlay() {
                         // end drawing.
                         setIsDrawing(false);
                         const context = e.currentTarget.getContext("2d");
+                        const video = document.getElementById("video") as HTMLVideoElement;
                         if (context) {
                             let box = getBoundingBox()
                             resetBoundingBoxCorners();
                             context.clearRect(0, 0, e.currentTarget.width, e.currentTarget.height);
-                            videoPlayerContext.setBoundingBoxes([...videoPlayerContext.boundingBoxes, box]);
-                            let event: AddBoundingBoxEvent = new AddBoundingBoxEvent(EventType.ADD_BOUNDING_BOX, uuidv4(), 0, box);
-                            websocketContext.sendEvent(event);
-                            console.log("AddBoundingBoxEvent sent for Object with ID " + event.bounding_box.id + " and frame number " + event.frame_number)
+                            if(video.getAttribute("src")) {
+                                videoPlayerContext.setBoundingBoxes([...videoPlayerContext.boundingBoxes, box]);
+                                let event: AddBoundingBoxEvent = new AddBoundingBoxEvent(EventType.ADD_BOUNDING_BOX, uuidv4(), 0, box);
+                                websocketContext.sendEvent(event);
+                                console.log("AddBoundingBoxEvent sent for Object with ID " + event.bounding_box.id + " and frame number " + event.frame_number)
+                            }
                         }
                     }}
             />
