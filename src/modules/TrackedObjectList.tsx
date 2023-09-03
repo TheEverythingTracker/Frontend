@@ -44,7 +44,7 @@ export const TrackedObjectList = () => {
             <Button
                 style={{
                     display: "flex",
-                    color: "red",
+                    color: "#d90429",
                     border: "solid",
                     width: "96%",
                     marginLeft: "2%",

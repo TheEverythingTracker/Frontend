@@ -12,13 +12,13 @@ export function Aside() {
                         top: "65px",
                         height: "100%",
                         width: "240px",
-                        zIndex: "999"
+                        zIndex: "998"
                     }
                 }}
                 variant="permanent"
                 anchor="right">
                 <div id="drawer-header">
-                    <Typography variant="h6" component="div" textAlign="center">
+                    <Typography variant="h6" component="div" textAlign="center" paddingTop="15px">
                         Objects
                     </Typography>
                 </div>

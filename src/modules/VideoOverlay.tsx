@@ -87,7 +87,7 @@ export function VideoOverlay() {
                 {videoPlayerContext.boundingBoxes.map((element, index) => {
                     // Render all bounding boxes to be displayed
                     return (
-                        <rect key={element.id} stroke="red" strokeWidth="4" fill="none" x={element.x.toString()}
+                        <rect key={element.id} stroke="#d90429" strokeWidth="4" fill="none" x={element.x.toString()}
                               y={element.y.toString()} height={element.height.toString()}
                               width={element.width.toString()}/>
                     );
@@ -105,7 +105,7 @@ export function VideoOverlay() {
                         if (context) {
                             context.beginPath();
                             context.lineWidth = 6;
-                            context.strokeStyle = "red";
+                            context.strokeStyle = "#d90429";
                             context.lineWidth = 5;
                             context.lineCap = "round";
                             context.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);

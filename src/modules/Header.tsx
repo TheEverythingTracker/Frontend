@@ -15,7 +15,10 @@ export default function Header() {
                  zIndex: "999"
              }}>
             <Box>
-                <AppBar position="static">
+                <AppBar position="static"
+                style={{
+                    background:"#8d99ae"
+                }}>
                     <Toolbar>
                         <Typography variant="h6" component="div">
                             The Everything Tracker
