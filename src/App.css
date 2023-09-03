@@ -1,47 +1,21 @@
-#video-container {
-    position: relative;
-    min-width: 1280px;
-    min-height: 720px;
-    top: 60px;
-    left: 0;
-    z-index: 1;
-}
-
-#controls {
-    position: absolute;
-    bottom: 0;
-    z-index: 4;
-    background: white;
-    opacity: 70%;
-    margin-left: 8px;
-    margin-bottom: 4px;
-}
-
-#fpsDiv{
-    position: absolute;
-    top: 0;
-    left: 25px;
-    z-index: 4;
-}
-
-#fps{
-    color: yellow;
-    font-family: "Courier New", serif;
-    font-size: x-large;
-    font-weight: bold;
+html,
+body {
+    height: 100%;
+    margin: 0;
 }
 
 #video, #canvas, .svgView {
     position: absolute;
+    top: 65px;
+    max-width: 1280px;
+    max-height: 720px;
     border-style: solid;
     border-color: rgb(128, 128, 128);
-    border-width: medium;
-    top: 0;
-    left: 0;
+    border-width: thin;
 }
 
-#canvas {
-    z-index: 4;
+.video-player {
+    position: absolute;
 }
 
 #video {
@@ -54,4 +28,36 @@
 
 rect {
     z-index: 3
+}
+
+#canvas {
+    z-index: 4;
+}
+
+#fpsDiv {
+    position: absolute;
+    top: 60px;
+    left: 25px;
+    z-index: 4;
+}
+
+#fps {
+    color: yellow;
+    font-family: "Courier New", serif;
+    font-size: x-large;
+    font-weight: bold;
+    z-index: 4;
+}
+
+#controls {
+    float: left;
+    width: 100px;
+    position: absolute;
+    bottom: 0;
+    z-index: 4;
+    background: white;
+    opacity: 70%;
+    margin-left: 8px;
+    margin-bottom: 4px;
+    top: 735px;
 }

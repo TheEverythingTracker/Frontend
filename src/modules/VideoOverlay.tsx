@@ -16,7 +16,12 @@ const pixelsY = 720;
 
 export function VideoOverlay() {
     const [isDrawing, setIsDrawing] = useState(false);
-    const currentlyDrawingBox = useRef({left: Number.MAX_SAFE_INTEGER, right: 0, top: Number.MAX_SAFE_INTEGER, bottom: 0})
+    const currentlyDrawingBox = useRef({
+        left: Number.MAX_SAFE_INTEGER,
+        right: 0,
+        top: Number.MAX_SAFE_INTEGER,
+        bottom: 0
+    })
     const videoPlayerContext = useContext(VideoPlayerContext);
     const websocketContext = useContext(WebsocketContext);
     // todo: Das braucht man, wenn die Größe des Canvas veränderlich sein soll
@@ -60,7 +65,12 @@ export function VideoOverlay() {
     }
 
     function resetBoundingBoxCorners() {
-        currentlyDrawingBox.current = {left: Number.MAX_SAFE_INTEGER, right: 0, top: Number.MAX_SAFE_INTEGER, bottom: 0};
+        currentlyDrawingBox.current = {
+            left: Number.MAX_SAFE_INTEGER,
+            right: 0,
+            top: Number.MAX_SAFE_INTEGER,
+            bottom: 0
+        };
     }
 
     function getBoundingBox() {

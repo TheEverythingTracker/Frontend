@@ -1,5 +1,5 @@
 import {Footer} from "./modules/Footer";
-import {RightToolbar} from "./modules/RightToolbar";
+
 
 import useWebSocket from 'react-use-websocket';
 import React, {useCallback, useContext, useRef, useState} from "react";
@@ -11,6 +11,8 @@ import {EventType, UpdateTrackingEvent} from "./models/Event";
 import {BoundingBox} from "./models/BoundingBox";
 import {BoundingBoxFrameData} from "./models/BoundingBoxFrameData";
 import {v4 as uuidv4} from 'uuid';
+import Header from "./modules/Header";
+import {Aside} from "./modules/Aside";
 
 
 function App() {
@@ -44,10 +46,10 @@ function App() {
         await video.play().then(_ => videoPlayerContext.setIsPlaying(true))
     }
 
-    function drawFPS(timestamp: DOMHighResTimeStamp){
+    function drawFPS(timestamp: DOMHighResTimeStamp) {
 
         let currentTimeInMs = timestamp - initialTimestamp.current;
-        let fps = Math.round(frameCounter.current/(currentTimeInMs/1000));
+        let fps = Math.round(frameCounter.current / (currentTimeInMs / 1000));
         // @ts-ignore
         let fpsParagraph = document.getElementById("fps") as HTMLParagraphElement;
         if (fpsParagraph !== undefined) {
@@ -57,7 +59,7 @@ function App() {
 
     const handleNewFrame = async (now: DOMHighResTimeStamp, _: VideoFrameCallbackMetadata) => {
 
-        if(frameCounter.current === 0) {
+        if (frameCounter.current === 0) {
             initialTimestamp.current = now;
         }
         drawFPS(now);
@@ -130,8 +132,9 @@ function App() {
         <WebsocketContext.Provider value={new WebsocketContextData(sendMessage)}>
             <VideoPlayerContext.Provider value={videoPlayerContextData}>
                 <div className="App">
-                    <RightToolbar></RightToolbar>
+                    <Header></Header>
                     <VideoPlayer></VideoPlayer>
+                    <Aside></Aside>
                     <Footer></Footer>
                 </div>
             </VideoPlayerContext.Provider>
