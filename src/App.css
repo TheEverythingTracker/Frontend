@@ -6,7 +6,8 @@ body {
 
 #video, #canvas, .svgView {
     position: absolute;
-    top: 65px;
+    top: 68px;
+    left: 3px;
     max-width: 1280px;
     max-height: 720px;
     border-style: solid;
@@ -15,7 +16,7 @@ body {
 }
 
 .video-player {
-    position: absolute;
+    position: relative;
 }
 
 #video {
@@ -51,9 +52,9 @@ rect {
 
 #controls {
     float: left;
-    width: 100px;
+    width: 80px;
+    height: 40px;
     position: absolute;
-    bottom: 0;
     z-index: 4;
     background: white;
     opacity: 70%;
