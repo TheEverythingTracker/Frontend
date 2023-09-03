@@ -18,8 +18,11 @@ export function VideoPlayer() {
             videoPlayerContext.setIsPlaying(true);
             await video.play();
         } else {
+            // needed because of slowdown function
+            while(!video.paused) {
+                video.pause();
+            }
             videoPlayerContext.setIsPlaying(false);
-            video.pause();
         }
     }
 
@@ -30,6 +33,10 @@ export function VideoPlayer() {
         canvas.getContext('2d')?.clearRect(0, 0, canvas.width, canvas.height);
         videoPlayerContext.setIsPlaying(false);
         videoPlayerContext.setBoundingBoxes([]);
+        let fpsParagraph = document.getElementById("fps") as HTMLParagraphElement;
+        if (fpsParagraph !== undefined) {
+            fpsParagraph.innerText = "";
+        }
     }
 
     return (

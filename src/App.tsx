@@ -50,7 +50,6 @@ function App() {
 
         let currentTimeInMs = timestamp - initialTimestamp.current;
         let fps = Math.round(frameCounter.current / (currentTimeInMs / 1000));
-        // @ts-ignore
         let fpsParagraph = document.getElementById("fps") as HTMLParagraphElement;
         if (fpsParagraph !== undefined) {
             fpsParagraph.innerText = "FPS: " + fps.toString();
