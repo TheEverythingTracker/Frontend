@@ -101,6 +101,10 @@ export function VideoOverlay() {
                     onMouseDown={(e) => {
                         // know that we are drawing, for future mouse movements.
                         setIsDrawing(true);
+                        let video = document.getElementById("video") as HTMLVideoElement;
+                        video.pause();
+                        // todo set videoPlayerContext.setIsPlaying(false); (currently setting this stops the boundingBoxes from being rendered)
+
                         const context = e.currentTarget.getContext("2d");
                         // begin path.
                         if (context) {
@@ -129,6 +133,8 @@ export function VideoOverlay() {
                         setIsDrawing(false);
                         const context = e.currentTarget.getContext("2d");
                         const video = document.getElementById("video") as HTMLVideoElement;
+                        video.play()
+                        // todo set videoPlayerContext.setIsPlaying(true); (currently setting this stops the boundingBoxes from being rendered)
                         if (context) {
                             let box = getBoundingBox()
                             resetBoundingBoxCorners();
