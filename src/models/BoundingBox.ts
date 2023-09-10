@@ -4,10 +4,10 @@ export class BoundingBox {
     height: number;
     width: number;
     id: number;
-    frame_number: number | null;
+    frame_number: number | null | undefined;
     static counter: number = 0;
 
-    constructor(x: number, y: number, width: number, height: number, frame_number: number | null) {
+    constructor(x: number, y: number, width: number, height: number, frame_number: number | null | undefined) {
         this.frame_number = frame_number;
         this.id = BoundingBox.counter++;
         this.x = x

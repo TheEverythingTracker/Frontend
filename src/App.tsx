@@ -21,12 +21,13 @@ function App() {
     const boundingBoxesQueue = useRef(Array()); // Contains bounding boxes received from the backend
     const handleIsStarted = useRef(false);      // Flag indicates if initHandleBoundingBoxes was run
     const websocketUrl = useRef("")
-    const frameCounter = useRef(0)
+
     const initialTimestamp = useRef(0)
     const video = document.getElementById("video") as HTMLVideoElement;
 
 
-    const videoPlayerContextData: VideoPlayerContextData = new VideoPlayerContextData(...useState<boolean>(false), ...useState<BoundingBox[]>([]));
+    const videoPlayerContextData: VideoPlayerContextData = new VideoPlayerContextData(...useState<boolean>(false),
+     ...useState<BoundingBox[]>([]), useRef(0));
 
     const videoPlayerContext = useContext(VideoPlayerContext);
 
@@ -49,25 +50,38 @@ function App() {
     function drawFPS(timestamp: DOMHighResTimeStamp) {
 
         let currentTimeInMs = timestamp - initialTimestamp.current;
-        let fps = Math.round(frameCounter.current / (currentTimeInMs / 1000));
-        let fpsParagraph = document.getElementById("fps") as HTMLParagraphElement;
-        if (fpsParagraph !== undefined) {
-            fpsParagraph.innerText = "FPS: " + fps.toString();
+        if(videoPlayerContextData.frameCounter !== null) {
+            let fps = Math.round(videoPlayerContextData.frameCounter.current / (currentTimeInMs / 1000));
+            let fpsParagraph = document.getElementById("fps") as HTMLParagraphElement;
+            if (fpsParagraph !== undefined) {
+                fpsParagraph.innerText = "FPS: " + fps.toString();
+                console.log("FPS should be set")
+            }
+            else {
+                console.log("fpsParagraph is undefined")
+            }
         }
+        else {
+            console.log("frameCounter is null")
+        }
+        
     }
 
     const handleNewFrame = async (now: DOMHighResTimeStamp, _: VideoFrameCallbackMetadata) => {
 
-        if (frameCounter.current === 0) {
+        console.log(videoPlayerContextData.frameCounter);
+        if (videoPlayerContextData.frameCounter?.current === 0) {
             initialTimestamp.current = now;
         }
         drawFPS(now);
         let next = boundingBoxesQueue.current[0]
         if (next === undefined) {
             await delayPlayback();
-            frameCounter.current++;
+            if(videoPlayerContextData.frameCounter?.current != null) {
+                videoPlayerContextData.frameCounter!.current++
+            }
         } else {
-            let currFrame = frameCounter.current++;
+            let currFrame = videoPlayerContextData.frameCounter!.current++;
 
             const allowedFrameOffset = 5;
             let minAcceptedFrame = currFrame - allowedFrameOffset

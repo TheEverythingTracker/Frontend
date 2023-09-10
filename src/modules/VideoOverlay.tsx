@@ -78,7 +78,8 @@ export function VideoOverlay() {
         let y = currentlyDrawingBox.current.top;
         let width = Math.abs(currentlyDrawingBox.current.right - currentlyDrawingBox.current.left);
         let height = Math.abs(currentlyDrawingBox.current.bottom - currentlyDrawingBox.current.top);
-        return new BoundingBox(x, y, width, height, null);
+        let frameNr: number | undefined = videoPlayerContext.frameCounter?.current;
+        return new BoundingBox(x, y, width, height, frameNr);
     }
 
     return (
