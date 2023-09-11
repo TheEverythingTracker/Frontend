@@ -19,7 +19,7 @@ export const TrackedObjectList = () => {
         const updatedBoundingBoxesList = videoPlayerContext.boundingBoxes.filter((box: BoundingBox) => box.id !== id);
         videoPlayerContext.boundingBoxes = updatedBoundingBoxesList;
         videoPlayerContext.setBoundingBoxes(videoPlayerContext.boundingBoxes)
-        videoPlayerContext.boundingBoxListCleared.current = updatedBoundingBoxesList.length == 0
+        videoPlayerContext.boundingBoxListCleared.current = updatedBoundingBoxesList.length === 0
 
     };
 

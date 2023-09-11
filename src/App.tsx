@@ -43,9 +43,9 @@ function App() {
 
     async function delayPlayback() {
         video.pause()
-        videoPlayerContext.setIsPlaying(false)
+        videoPlayerContextData.setIsPlaying(false)
         await new Promise(r => setTimeout(r, 120));
-        await video.play().then(_ => videoPlayerContext.setIsPlaying(true))
+        await video.play().then(_ => videoPlayerContextData.setIsPlaying(true))
     }
 
     function drawFPS(timestamp: DOMHighResTimeStamp) {
@@ -77,7 +77,9 @@ function App() {
         drawFPS(now);
         let next = boundingBoxesQueue.current[0]
         if (next === undefined) {
-            await delayPlayback();
+            if(!videoPlayerContext.boundingBoxListCleared.current) {
+                await delayPlayback();
+            }
             if(videoPlayerContextData.frameCounter?.current != null) {
                 videoPlayerContextData.frameCounter!.current++
             }
