@@ -78,7 +78,8 @@ export function VideoOverlay() {
         let y = currentlyDrawingBox.current.top;
         let width = Math.abs(currentlyDrawingBox.current.right - currentlyDrawingBox.current.left);
         let height = Math.abs(currentlyDrawingBox.current.bottom - currentlyDrawingBox.current.top);
-        return new BoundingBox(x, y, width, height, null);
+        let frameNr: number | undefined = videoPlayerContext.frameCounter?.current;
+        return new BoundingBox(x, y, width, height, frameNr);
     }
 
     return (
@@ -100,6 +101,10 @@ export function VideoOverlay() {
                     onMouseDown={(e) => {
                         // know that we are drawing, for future mouse movements.
                         setIsDrawing(true);
+                        let video = document.getElementById("video") as HTMLVideoElement;
+                        video.pause();
+                        // todo set videoPlayerContext.setIsPlaying(false); (currently setting this stops the boundingBoxes from being rendered)
+
                         const context = e.currentTarget.getContext("2d");
                         // begin path.
                         if (context) {
@@ -128,6 +133,8 @@ export function VideoOverlay() {
                         setIsDrawing(false);
                         const context = e.currentTarget.getContext("2d");
                         const video = document.getElementById("video") as HTMLVideoElement;
+                        video.play()
+                        // todo set videoPlayerContext.setIsPlaying(true); (currently setting this stops the boundingBoxes from being rendered)
                         if (context) {
                             let box = getBoundingBox()
                             resetBoundingBoxCorners();

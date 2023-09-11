@@ -1,5 +1,5 @@
 import {BoundingBox} from "./BoundingBox";
-import {createContext} from "react";
+import {createContext, useRef} from "react";
 
 export class VideoPlayerContextData {
     isPlaying: boolean;
@@ -7,7 +7,8 @@ export class VideoPlayerContextData {
     boundingBoxes: BoundingBox[];
     setBoundingBoxes: Function;
     boundingBoxListCleared: React.MutableRefObject<boolean>
-    
+    frameCounter: React.MutableRefObject<number> | null;
+
 /**
  * 
  * @param isPlaying: flag, true if video is currently played
@@ -17,14 +18,13 @@ export class VideoPlayerContextData {
  * @param boundingBoxListCleared: ref_variable indicating that the list of BoundingBoxes is empty because the user purposly deleted them
 
  */
-    constructor(isPlaying: boolean, setIsPlaying: Function, 
-        boundingBoxes: BoundingBox[], setBoundingBoxes: Function,
-        boundingBoxListCleared:React.MutableRefObject<boolean> ) {
+    constructor(isPlaying: boolean, setIsPlaying: Function, boundingBoxes: BoundingBox[], setBoundingBoxes: Function, frameCounter: React.MutableRefObject<number> | null, boundingBoxListCleared:React.MutableRefObject<boolean>) {
         
         this.isPlaying = isPlaying;
         this.setIsPlaying = setIsPlaying;
         this.boundingBoxes = boundingBoxes;
         this.setBoundingBoxes = setBoundingBoxes;
+        this.frameCounter = frameCounter;
         this.boundingBoxListCleared = boundingBoxListCleared;
     }
 }
@@ -33,3 +33,5 @@ export class VideoPlayerContextData {
 // (e.g. state and ref variables can't be created here because they can only be created
 // inside  a function component or a custom React Hook function)
 export const VideoPlayerContext = createContext<VideoPlayerContextData>({} as VideoPlayerContextData);
+
+
