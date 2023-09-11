@@ -26,7 +26,9 @@ function App() {
     const video = document.getElementById("video") as HTMLVideoElement;
 
 
-    const videoPlayerContextData: VideoPlayerContextData = new VideoPlayerContextData(...useState<boolean>(false), ...useState<BoundingBox[]>([]));
+    const videoPlayerContextData: VideoPlayerContextData = new VideoPlayerContextData(...useState<boolean>(false), 
+    ...useState<BoundingBox[]>([]),
+    useRef(true));
 
     const videoPlayerContext = useContext(VideoPlayerContext);
 
