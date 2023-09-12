@@ -19,7 +19,6 @@ function App() {
 
 
     const boundingBoxesQueue = useRef(Array()); // Contains bounding boxes received from the backend
-    const handleIsStarted = useRef(false);      // Flag indicates if initHandleBoundingBoxes was run
     const websocketUrl = useRef("")
 
     const initialTimestamp = useRef(0)
@@ -27,8 +26,7 @@ function App() {
 
 
     const videoPlayerContextData: VideoPlayerContextData = new VideoPlayerContextData(...useState<boolean>(false), 
-    ...useState<BoundingBox[]>([]),useRef(0),
-    useRef(true));
+    ...useState<BoundingBox[]>([]),useRef(0), useRef(true), useRef(false));
 
     const videoPlayerContext = useContext(VideoPlayerContext);
 
@@ -77,7 +75,7 @@ function App() {
         drawFPS(now);
         let next = boundingBoxesQueue.current[0]
         if (next === undefined) {
-            if(!videoPlayerContext.boundingBoxListCleared.current) {
+            if(!videoPlayerContextData.boundingBoxListCleared.current) {
                 await delayPlayback();
             }
             if(videoPlayerContextData.frameCounter?.current != null) {
@@ -113,13 +111,12 @@ function App() {
      * Setup required timer(=regulary run job)  to handle received boundingBoxes
      */
     function initHandleBoundingBoxes() {
-        if (!handleIsStarted.current && boundingBoxesQueue.current.length > 0) {
+        if (!videoPlayerContextData.receivedFirstBox.current && boundingBoxesQueue.current.length > 0) {
 
-            handleIsStarted.current = true;
+            videoPlayerContextData.receivedFirstBox.current = true;
             console.log("rein in if abfrage");
             if (!videoPlayerContextData.isPlaying) {
                 video.requestVideoFrameCallback(handleNewFrame)
-
                 videoPlayerContextData.setIsPlaying(true);
                 video.play();
             }

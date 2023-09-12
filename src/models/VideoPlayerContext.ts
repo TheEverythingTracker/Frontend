@@ -8,6 +8,7 @@ export class VideoPlayerContextData {
     setBoundingBoxes: Function;
     boundingBoxListCleared: React.MutableRefObject<boolean>
     frameCounter: React.MutableRefObject<number> | null;
+    receivedFirstBox:React.MutableRefObject<boolean>;
 
 /**
  * 
@@ -18,7 +19,8 @@ export class VideoPlayerContextData {
  * @param boundingBoxListCleared: ref_variable indicating that the list of BoundingBoxes is empty because the user purposly deleted them
 
  */
-    constructor(isPlaying: boolean, setIsPlaying: Function, boundingBoxes: BoundingBox[], setBoundingBoxes: Function, frameCounter: React.MutableRefObject<number> | null, boundingBoxListCleared:React.MutableRefObject<boolean>) {
+    constructor(isPlaying: boolean, setIsPlaying: Function, boundingBoxes: BoundingBox[], setBoundingBoxes: Function, 
+        frameCounter: React.MutableRefObject<number> | null, boundingBoxListCleared:React.MutableRefObject<boolean>,receivedFirstBox:React.MutableRefObject<boolean> ) {
         
         this.isPlaying = isPlaying;
         this.setIsPlaying = setIsPlaying;
@@ -26,6 +28,7 @@ export class VideoPlayerContextData {
         this.setBoundingBoxes = setBoundingBoxes;
         this.frameCounter = frameCounter;
         this.boundingBoxListCleared = boundingBoxListCleared;
+        this.receivedFirstBox = receivedFirstBox;
     }
 }
 

@@ -133,7 +133,11 @@ export function VideoOverlay() {
                         setIsDrawing(false);
                         const context = e.currentTarget.getContext("2d");
                         const video = document.getElementById("video") as HTMLVideoElement;
-                        video.play()
+
+                        if(videoPlayerContext.receivedFirstBox.current) {
+                            video.play()
+                        }
+                        
                         // todo set videoPlayerContext.setIsPlaying(true); (currently setting this stops the boundingBoxes from being rendered)
                         if (context) {
                             let box = getBoundingBox()
