@@ -1,10 +1,6 @@
 import React, {useContext, useState} from 'react';
-import EditIcon from '@mui/icons-material/Edit';
 import PublishIcon from '@mui/icons-material/Publish';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import CircleIcon from '@mui/icons-material/Circle';
-import {IconButton, InputBase, TextField} from "@mui/material";
+import {IconButton, TextField} from "@mui/material";
 import {VideoPlayerContext, VideoPlayerContextData} from "../models/VideoPlayerContext";
 import {EventType, StartControlLoopEvent} from "../models/Event";
 import {v4 as uuidv4} from 'uuid';
@@ -28,15 +24,17 @@ export function Footer() {
     };
 
     return (
-        <div style={{
-            display: "flex",
-            flexFlow: "row",
-            position: "fixed",
-            width: "calc(100%-6px)",
-            bottom: "3px",
-            left: "3px",
-            right: "3px",
-        }}>
+        <div className="footer"
+             style={{
+                 display: "flex",
+                 flexFlow: "row",
+                 position: "fixed",
+                 maxWidth: "calc(100% - 260px)",
+                 bottom: "3px",
+                 left: "3px",
+                 right: "3px",
+                 zIndex: "999"
+             }}>
 
             <TextField id="stream-url" label="Stream-URL" variant="outlined" value={videoSource}
                        onChange={e => setVideoSource(e.target.value)} style={{width: "100%"}}/>
@@ -54,29 +52,6 @@ export function Footer() {
             }}>
                 <PublishIcon/>
             </IconButton>
-
-            <IconButton onClick={() => {
-
-            }}>
-                <EditIcon></EditIcon>
-            </IconButton>
-
-            <ToggleButtonGroup
-                value={alignment}
-                exclusive
-                onChange={handleAlignment}
-                aria-label="text alignment">
-                <ToggleButton value="left" aria-label="left aligned">
-                    <CircleIcon style={{color: "blue"}}/>
-                </ToggleButton>
-                <ToggleButton value="center" aria-label="centered">
-                    <CircleIcon style={{color: "red"}}/>
-                </ToggleButton>
-                <ToggleButton value="right" aria-label="right aligned">
-                    <CircleIcon style={{color: "yellow"}}/>
-                </ToggleButton>
-            </ToggleButtonGroup>
-
         </div>
     );
 }

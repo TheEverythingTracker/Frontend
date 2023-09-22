@@ -11,16 +11,18 @@ export function VideoPlayer() {
 
     const videoPlayerContext = useContext(VideoPlayerContext);
 
-
-    function handleOnClickPlayPause() {
+    async function handleOnClickPlayPause() {
         let video = document.getElementById("video") as HTMLVideoElement;
 
         if (!videoPlayerContext.isPlaying) {
             videoPlayerContext.setIsPlaying(true);
-            video.play();
+            await video.play();
         } else {
+            // needed because of slowdown function
+            while(!video.paused) {
+                video.pause();
+            }
             videoPlayerContext.setIsPlaying(false);
-            video.pause();
         }
     }
 
@@ -31,16 +33,21 @@ export function VideoPlayer() {
         canvas.getContext('2d')?.clearRect(0, 0, canvas.width, canvas.height);
         videoPlayerContext.setIsPlaying(false);
         videoPlayerContext.setBoundingBoxes([]);
+        let fpsParagraph = document.getElementById("fps") as HTMLParagraphElement;
+        if (fpsParagraph !== undefined) {
+            fpsParagraph.innerText = "";
+        }
     }
 
     return (
-        <div id="video-container">
-
+        <div className="video-player">
             <video id="video" width="1280" height="720">
                 <source type="video/mp4"/>
             </video>
             <VideoOverlay/>
-
+            <div id="fpsDiv">
+                <p id="fps"></p>
+            </div>
             <div id="controls">
                 <div className="buttons">
                     <IconButton id="playPause" onClick={handleOnClickPlayPause}>

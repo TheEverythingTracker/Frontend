@@ -16,7 +16,12 @@ const pixelsY = 720;
 
 export function VideoOverlay() {
     const [isDrawing, setIsDrawing] = useState(false);
-    const currentlyDrawingBox = useRef({left: Number.MAX_SAFE_INTEGER, right: 0, top: Number.MAX_SAFE_INTEGER, bottom: 0})
+    const currentlyDrawingBox = useRef({
+        left: Number.MAX_SAFE_INTEGER,
+        right: 0,
+        top: Number.MAX_SAFE_INTEGER,
+        bottom: 0
+    })
     const videoPlayerContext = useContext(VideoPlayerContext);
     const websocketContext = useContext(WebsocketContext);
     // todo: Das braucht man, wenn die Größe des Canvas veränderlich sein soll
@@ -60,7 +65,12 @@ export function VideoOverlay() {
     }
 
     function resetBoundingBoxCorners() {
-        currentlyDrawingBox.current = {left: Number.MAX_SAFE_INTEGER, right: 0, top: Number.MAX_SAFE_INTEGER, bottom: 0};
+        currentlyDrawingBox.current = {
+            left: Number.MAX_SAFE_INTEGER,
+            right: 0,
+            top: Number.MAX_SAFE_INTEGER,
+            bottom: 0
+        };
     }
 
     function getBoundingBox() {
@@ -68,7 +78,8 @@ export function VideoOverlay() {
         let y = currentlyDrawingBox.current.top;
         let width = Math.abs(currentlyDrawingBox.current.right - currentlyDrawingBox.current.left);
         let height = Math.abs(currentlyDrawingBox.current.bottom - currentlyDrawingBox.current.top);
-        return new BoundingBox(x, y, width, height, null);
+        let frameNr: number | undefined = videoPlayerContext.frameCounter?.current;
+        return new BoundingBox(x, y, width, height, frameNr);
     }
 
     return (
@@ -77,7 +88,7 @@ export function VideoOverlay() {
                 {videoPlayerContext.boundingBoxes.map((element, index) => {
                     // Render all bounding boxes to be displayed
                     return (
-                        <rect key={element.id} stroke="red" strokeWidth="4" fill="none" x={element.x.toString()}
+                        <rect key={element.id} stroke="#d90429" strokeWidth="4" fill="none" x={element.x.toString()}
                               y={element.y.toString()} height={element.height.toString()}
                               width={element.width.toString()}/>
                     );
@@ -90,12 +101,16 @@ export function VideoOverlay() {
                     onMouseDown={(e) => {
                         // know that we are drawing, for future mouse movements.
                         setIsDrawing(true);
+                        let video = document.getElementById("video") as HTMLVideoElement;
+                        video.pause();
+                        // todo set videoPlayerContext.setIsPlaying(false); (currently setting this stops the boundingBoxes from being rendered)
+
                         const context = e.currentTarget.getContext("2d");
                         // begin path.
                         if (context) {
                             context.beginPath();
                             context.lineWidth = 6;
-                            context.strokeStyle = "red";
+                            context.strokeStyle = "#d90429";
                             context.lineWidth = 5;
                             context.lineCap = "round";
                             context.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
@@ -117,14 +132,24 @@ export function VideoOverlay() {
                         // end drawing.
                         setIsDrawing(false);
                         const context = e.currentTarget.getContext("2d");
+                        const video = document.getElementById("video") as HTMLVideoElement;
+
+                        if(videoPlayerContext.receivedFirstBox.current) {
+                            video.play()
+                        }
+                        
+                        // todo set videoPlayerContext.setIsPlaying(true); (currently setting this stops the boundingBoxes from being rendered)
                         if (context) {
                             let box = getBoundingBox()
                             resetBoundingBoxCorners();
                             context.clearRect(0, 0, e.currentTarget.width, e.currentTarget.height);
-                            videoPlayerContext.setBoundingBoxes([...videoPlayerContext.boundingBoxes, box]);
-                            let event: AddBoundingBoxEvent = new AddBoundingBoxEvent(EventType.ADD_BOUNDING_BOX, uuidv4(), 0, box);
-                            websocketContext.sendEvent(event);
-                            console.log("AddBoundingBoxEvent sent for Object with ID " + event.bounding_box.id + " and frame number " + event.frame_number)
+                            if(video.getAttribute("src")) {
+                                videoPlayerContext.setBoundingBoxes([...videoPlayerContext.boundingBoxes, box]);
+                                let event: AddBoundingBoxEvent = new AddBoundingBoxEvent(EventType.ADD_BOUNDING_BOX, uuidv4(), 0, box);
+                                websocketContext.sendEvent(event);
+                                console.log("AddBoundingBoxEvent sent for Object with ID " + event.bounding_box.id + " and frame number " + event.frame_number);
+                                videoPlayerContext.boundingBoxListCleared.current = false;
+                            }
                         }
                     }}
             />
