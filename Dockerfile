@@ -7,7 +7,7 @@ COPY . .
 
 RUN yarn install && yarn build
 
-# Serve the app wiht nginx
+# Serve the app with nginx
 FROM nginx:1.25.2-bookworm
 
 RUN useradd -u 8877 containeruser
