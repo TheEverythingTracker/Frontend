@@ -46,9 +46,12 @@ using [MUI](https://mui.com/material-ui/getting-started/) for Material UI Compon
 
 ### Set up
 
-1. Clone this repository and install the dependencies with [npm](https://www.npmjs.com/).
-2. Run the application with ```npm run start```
-3. Learn how to set up the Backend here: [TheEverythingTracker/Backend](https://github.com/TheEverythingTracker/Backend)
+1. If you don't have it yet: Install npm (see
+   these [docs](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm))
+1. Clone this repository
+1. Install the dependencies with ```npm install```.
+1. Run the application with ```npm run start```
+1. Learn how to set up the Backend here: [TheEverythingTracker/Backend](https://github.com/TheEverythingTracker/Backend)
 
 ### Build a new Docker Image
 
