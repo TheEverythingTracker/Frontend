@@ -7,7 +7,8 @@ export enum EventType {
     UPDATE_TRACKING = "update-tracking",
     STOP_CONTROL_LOOP = "stop-control-loop",
     SUCCESS = "success",
-    FAILURE = "failure"
+    FAILURE = "failure",
+    TRACKING_ERROR = "tracking-error"
 }
 
 
@@ -16,6 +17,16 @@ export abstract class Event {
 
     protected constructor(event_type: EventType) {
         this.event_type = event_type;
+    }
+}
+
+export class TrackingErrorEvent extends Event {
+    message: String;
+    boundingBoxId: number;
+    constructor(event_type: EventType, message: String, boundingBoxId: number) {
+        super(event_type);
+        this.message = message;
+        this.boundingBoxId = boundingBoxId;
     }
 }
 

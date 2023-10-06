@@ -7,28 +7,30 @@ import "./App.css"
 import {VideoPlayer} from "./modules/VideoPlayer";
 import {VideoPlayerContext, VideoPlayerContextData} from "./models/VideoPlayerContext";
 import {WebsocketContext, WebsocketContextData} from "./models/WebsocketContext";
-import {EventType, UpdateTrackingEvent} from "./models/Event";
+import {EventType, TrackingErrorEvent, UpdateTrackingEvent} from "./models/Event";
 import {BoundingBox} from "./models/BoundingBox";
 import {BoundingBoxFrameData} from "./models/BoundingBoxFrameData";
 import {v4 as uuidv4} from 'uuid';
 import Header from "./modules/Header";
 import {Aside} from "./modules/Aside";
+import {toast, Toaster} from "react-hot-toast";
 
 
 function App() {
 
 
     const boundingBoxesQueue = useRef(Array()); // Contains bounding boxes received from the backend
+    const lastError = useRef(new TrackingErrorEvent(EventType.TRACKING_ERROR, "dummy", -1)); // Contains errors received from the backend
+    const boundingBoxIdsWithError = useRef(Array()); // Contains bounding-box ids which should be added to deleted Ids (blacklist)
     const websocketUrl = useRef("")
 
     const initialTimestamp = useRef(0)
     const video = document.getElementById("video") as HTMLVideoElement;
 
 
-    const videoPlayerContextData: VideoPlayerContextData = new VideoPlayerContextData(...useState<boolean>(false), 
-    ...useState<BoundingBox[]>([]), ...useState<number[]>([]),useRef(0), useRef(true), useRef(false));
+    const videoPlayerContextData: VideoPlayerContextData = new VideoPlayerContextData(...useState<boolean>(false),
+        ...useState<BoundingBox[]>([]), ...useState<number[]>([]), useRef(0), useRef(true), useRef(false));
 
-    const videoPlayerContext = useContext(VideoPlayerContext);
 
     const getUrl = useCallback(() => {
         if (websocketUrl.current === "") {
@@ -49,36 +51,53 @@ function App() {
     function drawFPS(timestamp: DOMHighResTimeStamp) {
 
         let currentTimeInMs = timestamp - initialTimestamp.current;
-        if(videoPlayerContextData.frameCounter !== null) {
+        if (videoPlayerContextData.frameCounter !== null) {
             let fps = Math.round(videoPlayerContextData.frameCounter.current / (currentTimeInMs / 1000));
             let fpsParagraph = document.getElementById("fps") as HTMLParagraphElement;
             if (fpsParagraph !== undefined) {
                 fpsParagraph.innerText = "FPS: " + fps.toString();
-                console.log("FPS should be set")
-            }
-            else {
+            } else {
                 console.log("fpsParagraph is undefined")
             }
-        }
-        else {
+        } else {
             console.log("frameCounter is null")
         }
-        
+
     }
 
     const handleNewFrame = async (now: DOMHighResTimeStamp, _: VideoFrameCallbackMetadata) => {
 
-        console.log(videoPlayerContextData.frameCounter);
+        console.log("Frame: " + videoPlayerContextData.frameCounter?.current);
         if (videoPlayerContextData.frameCounter?.current === 0) {
             initialTimestamp.current = now;
         }
         drawFPS(now);
         let next = boundingBoxesQueue.current[0]
+
+        let nextFrameBoundingBoxIds = Array<number>();
+        if (next !== undefined) {
+            nextFrameBoundingBoxIds = next.boundingBoxes.map((box: BoundingBox) => box.id);
+        }
+
+        console.log("showing boxes with ids: " + nextFrameBoundingBoxIds)
+        let boxesToDelete = boundingBoxIdsWithError.current.filter((box) => !nextFrameBoundingBoxIds.includes(box));
+
+        let updatedDeletedBoundingBoxIds = videoPlayerContextData.deletedBoundingBoxIds;
+        updatedDeletedBoundingBoxIds.push(...boxesToDelete);
+        console.log("not showing deleted ids: " + updatedDeletedBoundingBoxIds)
+
+        videoPlayerContextData.setDeletedBoundingBoxIds(updatedDeletedBoundingBoxIds);
+        if (boxesToDelete.length > 0) {
+            toast.error(`Tracker lost Object ${boxesToDelete.map((box) => box + 1)}`);
+            boundingBoxIdsWithError.current = [];
+        }
+
+
         if (next === undefined) {
-            if(!videoPlayerContextData.boundingBoxListCleared.current) {
+            if (!videoPlayerContextData.boundingBoxListCleared.current) {
                 await delayPlayback();
             }
-            if(videoPlayerContextData.frameCounter?.current != null) {
+            if (videoPlayerContextData.frameCounter?.current != null) {
                 videoPlayerContextData.frameCounter!.current++
             }
         } else {
@@ -112,9 +131,7 @@ function App() {
      */
     function initHandleBoundingBoxes() {
         if (!videoPlayerContextData.receivedFirstBox.current && boundingBoxesQueue.current.length > 0) {
-
             videoPlayerContextData.receivedFirstBox.current = true;
-            console.log("rein in if abfrage");
             if (!videoPlayerContextData.isPlaying) {
                 video.requestVideoFrameCallback(handleNewFrame)
                 videoPlayerContextData.setIsPlaying(true);
@@ -131,19 +148,32 @@ function App() {
         onMessage: event => {
             // parse json 2 times because event is stringified "too much"
             let jsonEvent = JSON.parse(JSON.parse(event.data))
-            console.log(jsonEvent.event_type)
+            console.log(jsonEvent.event_type + " Event received")
             if (jsonEvent.event_type === EventType.UPDATE_TRACKING) {
                 let updateEvent = jsonEvent as UpdateTrackingEvent;
                 boundingBoxesQueue.current.push(new BoundingBoxFrameData(updateEvent.frame_number, updateEvent.bounding_boxes));
                 initHandleBoundingBoxes();
+            } else if (jsonEvent.event_type === EventType.TRACKING_ERROR) {
+                lastError.current = jsonEvent as TrackingErrorEvent;
             }
         }
     });
+
+    const onError = useCallback(() => {
+        if (lastError.current.event_type === EventType.TRACKING_ERROR && lastError.current.boundingBoxId != -1) {
+            console.log(`Tracker lost Object ${lastError.current.boundingBoxId}`)
+            boundingBoxIdsWithError.current.push(lastError.current.boundingBoxId);
+            lastError.current = new TrackingErrorEvent(EventType.TRACKING_ERROR, "dummy", -1);
+        }
+    }, [lastError]);
+
+    onError();
 
 
     return (
         <WebsocketContext.Provider value={new WebsocketContextData(sendMessage)}>
             <VideoPlayerContext.Provider value={videoPlayerContextData}>
+                <div><Toaster/></div>
                 <div className="App">
                     <Header></Header>
                     <VideoPlayer></VideoPlayer>
