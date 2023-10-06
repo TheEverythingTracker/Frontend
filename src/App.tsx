@@ -89,7 +89,7 @@ function App() {
         videoPlayerContextData.setDeletedBoundingBoxIds(updatedDeletedBoundingBoxIds);
         if (boxesToDelete.length > 0) {
             toast.error(`Tracker lost Object ${boxesToDelete.map((box) => box + 1)}`);
-            boundingBoxIdsWithError.current = [];
+            boundingBoxIdsWithError.current = boundingBoxIdsWithError.current.filter((elem) => !boxesToDelete.includes(elem))
         }
 
 
