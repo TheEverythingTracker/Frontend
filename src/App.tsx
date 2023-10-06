@@ -26,7 +26,7 @@ function App() {
 
 
     const videoPlayerContextData: VideoPlayerContextData = new VideoPlayerContextData(...useState<boolean>(false), 
-    ...useState<BoundingBox[]>([]),useRef(0), useRef(true), useRef(false));
+    ...useState<BoundingBox[]>([]), ...useState<number[]>([]),useRef(0), useRef(true), useRef(false));
 
     const videoPlayerContext = useContext(VideoPlayerContext);
 

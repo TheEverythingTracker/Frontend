@@ -16,6 +16,11 @@ export const TrackedObjectList = () => {
     const handleDelete = (id: number) => {
 
         websocketContext.sendEvent(new DeleteBoundingBoxesEvent(EventType.DELETE_BOUNDING_BOX, uuidv4(), [id]))
+
+        let updatedDeletedBoundingBoxesIds = videoPlayerContext.deletedBoundingBoxIds;
+        updatedDeletedBoundingBoxesIds.push(id);
+        videoPlayerContext.setDeletedBoundingBoxIds(updatedDeletedBoundingBoxesIds);
+
         const updatedBoundingBoxesList = videoPlayerContext.boundingBoxes.filter((box: BoundingBox) => box.id !== id);
         videoPlayerContext.boundingBoxes = updatedBoundingBoxesList;
         videoPlayerContext.setBoundingBoxes(videoPlayerContext.boundingBoxes)
@@ -28,6 +33,11 @@ export const TrackedObjectList = () => {
 
         videoPlayerContext.boundingBoxes.forEach((element) => allIds.push(element.id));
         websocketContext.sendEvent(new DeleteBoundingBoxesEvent(EventType.DELETE_BOUNDING_BOX, uuidv4(), allIds));
+
+        let updatedDeletedBoundingBoxesIds = videoPlayerContext.deletedBoundingBoxIds;
+        updatedDeletedBoundingBoxesIds.push(...allIds);
+        videoPlayerContext.setDeletedBoundingBoxIds(updatedDeletedBoundingBoxesIds);
+
         videoPlayerContext.boundingBoxes = [];
         videoPlayerContext.setBoundingBoxes(videoPlayerContext.boundingBoxes)
         videoPlayerContext.boundingBoxListCleared.current = true;
@@ -36,7 +46,7 @@ export const TrackedObjectList = () => {
     return (
         <div>
             <List style={{display: "flex", flexFlow: "column"}}>
-                {videoPlayerContext.boundingBoxes.map((element, _) => {
+                {videoPlayerContext.boundingBoxes.filter((elem) => !videoPlayerContext.deletedBoundingBoxIds.includes(elem.id)).map((element, _) => {
                     return (
                         <TrackedObjectListItem name={`Object ${element.id + 1}`}
                                                deleteHandler={() => handleDelete(element.id)}
