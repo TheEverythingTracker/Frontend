@@ -85,7 +85,7 @@ export function VideoOverlay() {
     return (
         <div>
             <svg id="svgBoundingBoxesView" className="svgView" width="1280" height="720">
-                {videoPlayerContext.boundingBoxes.map((element, index) => {
+                {videoPlayerContext.boundingBoxes.filter((elem) => !videoPlayerContext.deletedBoundingBoxIds.includes(elem.id)).map((element, index) => {
                     // Render all bounding boxes to be displayed
                     return (
                         <rect key={element.id} stroke="#d90429" strokeWidth="4" fill="none" x={element.x.toString()}

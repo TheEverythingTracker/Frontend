@@ -10,14 +10,10 @@ RUN yarn install && yarn build
 # Serve the app with nginx
 FROM nginx:1.25.2-bookworm
 
-RUN useradd -u 8877 containeruser
-
 WORKDIR /usr/share/nginx/html
 
 RUN rm -rf ./*
 
 COPY --from=builder /app/build .
 
-USER containeruser
-
-ENTRYPOINT ["nginx", "-g", "deamon off;"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
