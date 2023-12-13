@@ -2,7 +2,7 @@ import {Footer} from "./modules/Footer";
 
 
 import useWebSocket from 'react-use-websocket';
-import React, {useCallback, useContext, useRef, useState} from "react";
+import React, {useCallback, useRef, useState} from "react";
 import "./App.css"
 import {VideoPlayer} from "./modules/VideoPlayer";
 import {VideoPlayerContext, VideoPlayerContextData} from "./models/VideoPlayerContext";
@@ -90,12 +90,15 @@ function App() {
         if (boxesToDelete.length > 0) {
             toast.error(`Tracker lost Object ${boxesToDelete.map((box) => box + 1)}`);
             boundingBoxIdsWithError.current = boundingBoxIdsWithError.current.filter((elem) => !boxesToDelete.includes(elem))
+            videoPlayerContextData.boundingBoxListCleared.current = nextFrameBoundingBoxIds.length === 0;
         }
-
 
         if (next === undefined) {
             if (!videoPlayerContextData.boundingBoxListCleared.current) {
                 await delayPlayback();
+            } else {
+                videoPlayerContextData.boundingBoxes = [];
+                videoPlayerContextData.setBoundingBoxes(videoPlayerContextData.boundingBoxes);
             }
             if (videoPlayerContextData.frameCounter?.current != null) {
                 videoPlayerContextData.frameCounter!.current++

@@ -137,7 +137,7 @@ export function VideoOverlay() {
                         if(videoPlayerContext.receivedFirstBox.current) {
                             video.play()
                         }
-                        
+
                         // todo set videoPlayerContext.setIsPlaying(true); (currently setting this stops the boundingBoxes from being rendered)
                         if (context) {
                             let box = getBoundingBox()
@@ -145,7 +145,7 @@ export function VideoOverlay() {
                             context.clearRect(0, 0, e.currentTarget.width, e.currentTarget.height);
                             if(video.getAttribute("src")) {
                                 videoPlayerContext.setBoundingBoxes([...videoPlayerContext.boundingBoxes, box]);
-                                let event: AddBoundingBoxEvent = new AddBoundingBoxEvent(EventType.ADD_BOUNDING_BOX, uuidv4(), 0, box);
+                                let event: AddBoundingBoxEvent = new AddBoundingBoxEvent(EventType.ADD_BOUNDING_BOX, uuidv4(), videoPlayerContext.frameCounter?.current??0, box);
                                 websocketContext.sendEvent(event);
                                 console.log("AddBoundingBoxEvent sent for Object with ID " + event.bounding_box.id + " and frame number " + event.frame_number);
                                 videoPlayerContext.boundingBoxListCleared.current = false;
