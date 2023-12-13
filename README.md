@@ -66,4 +66,5 @@ using [MUI](https://mui.com/material-ui/getting-started/) for Material UI Compon
 Whenever new Changes are pushed to the "main" branch, a new Docker image will be built
 by
 this [GitHub Actions Pipeline](https://github.com/TheEverythingTracker/Frontend/actions/workflows/docker-publish.yml).
-You can find the latest Docker image [here](https://github.com/orgs/TheEverythingTracker/packages?repo_name=Frontend).
+You can find the latest Docker image [here](https://github.com/orgs/TheEverythingTracker/packages?repo_name=Frontend).  
+If you want to build locally run `docker build -t frontend:dev .`
