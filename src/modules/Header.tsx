@@ -3,8 +3,14 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import CellTowerIcon from '@mui/icons-material/CellTower';
+import NoCellIcon from '@mui/icons-material/NoCell';
 
-export default function Header() {
+interface Header {
+    websocketConnected: boolean;
+}
+
+export default function Header({websocketConnected}: Header) {
     return (
         <div className="header"
              style={{
@@ -16,13 +22,14 @@ export default function Header() {
              }}>
             <Box>
                 <AppBar position="static"
-                style={{
-                    background:"#8d99ae"
-                }}>
+                        style={{
+                            background: "#8d99ae"
+                        }}>
                     <Toolbar>
-                        <Typography variant="h6" component="div">
+                        <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                             The Everything Tracker
                         </Typography>
+                        {websocketConnected ? <CellTowerIcon/> : <NoCellIcon/>}
                     </Toolbar>
                 </AppBar>
             </Box>

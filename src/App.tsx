@@ -26,6 +26,7 @@ function App() {
 
     const initialTimestamp = useRef(0)
     const video = document.getElementById("video") as HTMLVideoElement;
+    const connected = useRef(false);
 
 
     const videoPlayerContextData: VideoPlayerContextData = new VideoPlayerContextData(...useState<boolean>(false),
@@ -147,6 +148,7 @@ function App() {
     const {sendMessage} = useWebSocket(getUrl, {
         onOpen: () => {
             console.log("Connected to websocket ");
+            connected.current = true;
         },
         onMessage: event => {
             // parse json 2 times because event is stringified "too much"
@@ -159,6 +161,9 @@ function App() {
             } else if (jsonEvent.event_type === EventType.TRACKING_ERROR) {
                 lastError.current = jsonEvent as TrackingErrorEvent;
             }
+        },
+        onClose: () => {
+            connected.current = false;
         }
     });
 
@@ -178,7 +183,7 @@ function App() {
             <VideoPlayerContext.Provider value={videoPlayerContextData}>
                 <div><Toaster/></div>
                 <div className="App">
-                    <Header></Header>
+                    <Header websocketConnected={connected.current}></Header>
                     <VideoPlayer></VideoPlayer>
                     <Aside></Aside>
                     <Footer></Footer>
